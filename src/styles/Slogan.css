@@ -1,0 +1,34 @@
+:root {
+    --fh-colornoir-fnnoir-principal: rgba(1, 1, 1, 1);
+    --fh-colorblanc-fnblanc-principal: rgba(255, 255, 255, 1);
+    --slogan-font-family: "Glacial Indifference-Italic", Helvetica;
+    --slogan-font-size: 30px;
+    --slogan-line-height: 48px;
+    --slogan-letter-spacing: -0.06px;
+  }
+  
+  .slogan {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--fh-colornoir-fnnoir-principal);
+    width: 100%;
+    padding: 5px 0;
+    position: relative;
+    gap: 10px;
+  }
+  
+  .slogan-text {
+    color: var(--fh-colorblanc-fnblanc-principal);
+    font-family: var(--slogan-font-family);
+    font-size: var(--slogan-font-size);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: var(--slogan-letter-spacing);
+    line-height: var(--slogan-line-height);
+    text-align: center;
+    margin: 0;
+    flex: 1;
+    position: relative;
+  }
+  

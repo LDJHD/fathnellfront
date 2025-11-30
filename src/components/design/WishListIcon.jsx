@@ -1,0 +1,14 @@
+import React from "react";
+
+export const WishListIcon = ({ className = "", color = "#010101", fill = "none" }) => {
+  return (
+    <svg className={className} width="32" height="32" viewBox="0 0 24 24" fill={fill} xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill={fill === "none" ? "none" : color}/>
+    </svg>
+  );
+};
+
+export default WishListIcon;
+
+
+
