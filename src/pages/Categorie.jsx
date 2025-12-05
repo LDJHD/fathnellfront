@@ -313,7 +313,7 @@ export default function Categorie() {
                                             e.stopPropagation();
                                             await toggleWishlist(produit.id);
                                         }}
-                                        className="absolute top-2 right-2 bg-white p-2 border border-black rounded-sm hover:scale-110 transition z-10"
+                                        className="absolute top-2 right-2 bg-white p-1 md:p-2 border border-black rounded-sm hover:scale-110 transition z-10"
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
