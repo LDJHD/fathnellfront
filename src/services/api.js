@@ -114,10 +114,10 @@ export const panierAPI = {
             body: { session_id: sessionId }
         });
     },
-    ajouter: (produit_id, quantite = 1, personnalise = false, couleur_id = null, taille_id = null) => {
+    ajouter: (produit_id, quantite = 1, personnalise = false, couleur_id = null, taille_id = null, texte_personnalisation = null) => {
         return fetchWithSession('/api/v1/panier/ajouter', {
             method: 'POST',
-            body: { produit_id, quantite, personnalise, couleur_id, taille_id }
+            body: { produit_id, quantite, personnalise, couleur_id, taille_id, texte_personnalisation }
         });
     },
     modifierQuantite: (item_id, quantite) => {
@@ -182,19 +182,24 @@ export const categoriesAPI = {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
     }),
-    create: (data) => fetch(`${API_URL}/api/v1/categorie/create`, {
+    create: (formData) => {
+        const token = localStorage.getItem("token");
+        return fetch(`${API_URL}/api/v1/categorie/create`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData // FormData pour les bannières
+        });
+    },
+    update: (formData) => {
+        const token = localStorage.getItem("token");
+        return fetch(`${API_URL}/api/v1/categorie/update`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData // FormData pour les bannières
+        });
+    },
+    delete: (id) => fetchWithAuth('/api/v1/categorie/delete', {
         method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    }),
-    update: (data) => fetch(`${API_URL}/api/v1/categorie/update`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    }),
-    delete: (id) => fetch(`${API_URL}/api/v1/categorie/delete`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
     }),
     getSousCategories: (parent_id) => fetch(`${API_URL}/api/v1/categorie/sous-categories`, {

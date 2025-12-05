@@ -15,6 +15,7 @@ export default function FicheProduit() {
   const [selectedCouleur, setSelectedCouleur] = useState(null);
   const [selectedTaille, setSelectedTaille] = useState(null);
   const [personaliser, setPersonnaliser] = useState(false);
+  const [textePersonnalisation, setTextePersonnalisation] = useState("");
   const [ajoutEnCours, setAjoutEnCours] = useState(false);
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { loadPanier } = usePanier();
@@ -56,12 +57,19 @@ export default function FicheProduit() {
         1, // quantité
         personaliser,
         selectedCouleur,
-        selectedTaille
+        selectedTaille,
+        textePersonnalisation.trim()
       );
 
       if (response.ok) {
         loadPanier(); // Recharger le contexte pour mettre à jour la Navbar
         alert("Produit ajouté au panier avec succès !");
+        
+        // Réinitialiser les sélections
+        setSelectedCouleur(null);
+        setSelectedTaille(null);
+        setPersonnaliser(false);
+        setTextePersonnalisation("");
       } else {
         const errorData = await response.json();
         alert(`Erreur: ${errorData.message}`);
@@ -249,22 +257,45 @@ export default function FicheProduit() {
 
           {/* CHECKBOX PERSONNALISATION */}
           {produit.personnalisable && (
-            <label className="flex items-center gap-3 mt-4 cursor-pointer">
-              <input 
-                type="checkbox" 
-                className="w-5 h-5 border bg-white border-black"
-                checked={personaliser}
-                onChange={(e) => setPersonnaliser(e.target.checked)}
-              />
-              <span className="text-base leading-6">
-                Je veux personnaliser avant d'ajouter au panier
-              </span>
-            </label>
+            <div className="mt-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  className="w-5 h-5 border bg-white border-black"
+                  checked={personaliser}
+                  onChange={(e) => setPersonnaliser(e.target.checked)}
+                />
+                <span className="text-base leading-6">
+                  Je veux personnaliser avant d'ajouter au panier
+                </span>
+              </label>
+              
+              {/* CHAMP DE PERSONNALISATION */}
+              {personaliser && (
+                <div className="mt-3">
+                  <label htmlFor="textePersonnalisation" className="block text-base leading-6 mb-2">
+                    Texte de personnalisation :
+                  </label>
+                  <textarea
+                    id="textePersonnalisation"
+                    value={textePersonnalisation}
+                    onChange={(e) => setTextePersonnalisation(e.target.value)}
+                    placeholder="Saisissez le texte que vous souhaitez faire graver ou broder..."
+                    className="w-full p-3 border border-black rounded-sm resize-none focus:outline-none focus:ring-2 bg-white focus:ring-black focus:border-transparent"
+                    rows={3}
+                    maxLength={200}
+                  />
+                  <div className="text-sm text-gray-500 mt-1">
+                    {textePersonnalisation.length}/200 caractères
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {/* BOUTONS */}
-          <div className="flex flex-col sm:flex-row gap-3 mt-4">
-            <button 
+          <div className="flex flex-col sm:flex-row gap-3 mt-4 mb-5">
+            <button
               onClick={handleAjouterAuPanier}
               disabled={ajoutEnCours}
               className={`px-6 py-2 text-base font-bold rounded-sm w-fit ${

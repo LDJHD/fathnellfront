@@ -27,7 +27,7 @@ const MobileDropdown = ({
       {/* Trigger element */}
       <button
         onClick={handleToggle}
-        className="flex items-center justify-between w-full px-4 py-3 text-left text-lg font-['Glacial_Indifference'] text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+        className="flex items-center justify-between w-full border-none bg-white px-4 py-3 text-left text-lg font-['Glacial_Indifference'] text-gray-700 hover:bg-neutral-200 hover:font-bold transition-colors focus:outline-none"
       >
         {label}
         <svg 

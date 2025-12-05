@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PromoBadge from "../components/PromoBadge";
 import { useParams } from "react-router-dom";
 import heroImage from "../assets/hero-image.jpg";
 import img12 from "../assets/img12.png";
@@ -160,7 +161,13 @@ export default function Magazin() {
             {/* ---------- BANNIÈRE ---------- */}
             <div
                 className="w-full h-[200px] md:h-[700px] bg-cover bg-center"
-                style={{ backgroundImage: `url(${heroImage})` }}
+                style={{ 
+                    backgroundImage: `url(${
+                        collection?.image 
+                            ? `${import.meta.env.VITE_API_URL}/uploads/collections/${collection.image}`
+                            : heroImage
+                    })` 
+                }}
             />
             {/* ---------- nom collection ---------- */}
             {/* si collection
@@ -248,19 +255,23 @@ export default function Magazin() {
                         {produits.map((produit) => (
                             <div 
                                 key={produit.id} 
-                                className="group relative bg-white mt-5 overflow-hidden cursor-pointer"
+                                className="group relative bg-white overflow-hidden cursor-pointer"
                                 onClick={() => handleProduitClick(produit.id)}
                             >
 
                                 {/* Image + options */}
-                                <div className="relative overflow-hidden rounded-md">
+                                <div className="relative overflow-hidden aspect-square md:aspect-auto md:h-72">
 
-                                    {/* Badge promo */}
-                                    {produit.en_promo && (
-                                        <div className="absolute top-2 left-2 bg-red-600 text-white text-sm font-normal font-['Glacial_Indifference'] leading-5 px-3 py-1 rounded-tr-lg rounded-bl-lg z-10">
-                                            En promo
-                                        </div>
-                                    )}
+                                    {/* Badge promo - ou espace réservé pour maintenir l'alignement */}
+                                    <div className="absolute top-2 left-0 z-10">
+                                        {produit.en_promo ? (
+                                            <PromoBadge />
+                                        ) : (
+                                            <div className="invisible">
+                                                <PromoBadge />
+                                            </div>
+                                        )}
+                                    </div>
 
                                     {/* Icône cœur */}
                                     <button 
@@ -292,30 +303,23 @@ export default function Magazin() {
                                             : img12
                                         }
                                         alt={produit.nom}
-                                        className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-95 group-hover:brightness-90"
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-95 group-hover:brightness-90"
                                     />
                                 </div>
 
                                 {/* Infos produit */}
                                 <div className="mt-4 text-start">
-                                    <h3 className="text-black text-lg font-normal font-['Glacial_Indifference']">
-                                        {produit.nom}
-                                    </h3>
-
-                                    {produit.en_promo ? (
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <span className="text-gray-400 line-through text-sm font-['Glacial_Indifference']">
-                                                {produit.prix?.toLocaleString()} xof
-                                            </span>
-                                            <span className="text-red-600 text-lg font-bold font-['Glacial_Indifference']">
-                                                {produit.prix_promo?.toLocaleString()} xof
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <span className="text-black text-lg font-bold font-['Glacial_Indifference']">
-                                            {produit.prix?.toLocaleString()} xof
-                                        </span>
-                                    )}
+                                    <h3 className="text-black text-lg leading-8 font-normal">{produit.nom}</h3>
+                                    <div className="mt-2">
+                                        {produit.en_promo ? (
+                                            <>
+                                                <span className="text-gray-400 line-through mr-2">{produit.prix?.toLocaleString()} xof</span>
+                                                <span className="text-red-600 font-bold">{produit.prix_promo?.toLocaleString()} xof</span>
+                                            </>
+                                        ) : (
+                                            <span className="text-gray-900 font-bold">{produit.prix?.toLocaleString()} xof</span>
+                                        )}
+                                    </div>
                                 </div>
 
                             </div>

@@ -1,3 +1,5 @@
+import texteImage from '../assets/texte.png';
+
 export const SloganFat = () => {
     return (
     //   <section className="flex justify-center text-center py-12 px-4">
@@ -11,16 +13,19 @@ export const SloganFat = () => {
     //     </p>
     //   </section>
       <section className="flex flex-col items-center text-center py-16 px-2 bg-white">
-      {/* Logo FathNell */}
-      <h1 className="text-5xl md:text-6xl font-bold font-['Glacial_Indifference'] leading-tight">
-        <span className="text-black">Fath</span>
-        <span className="text-red-600">Nell</span>
-      </h1>
+      {/* Logo FathNell - Image texte.png */}
+      <div className="mb-4 w-full flex justify-center">
+        <img 
+          src={texteImage} 
+          alt="FathNell" 
+          className="h-12 sm:h-16 md:h-20 lg:h-24 w-auto object-contain"
+        />
+      </div>
 
       
     
       {/* Texte descriptif */}
-      <div className="mt-8 sm:px-4 sm:py-6 md:max-w-6xl space-y-6 text-black text-xl font-normal italic font-['Glacial_Indifference'] leading-10  md:text-3xl  ">
+      <div className="mt-8 sm:px-4 max-w-[350px] sm:py-6 md:max-w-[1350px] space-y-6 text-black text-xl font-normal italic font-['Glacial_Indifference'] md:leading-10  md:text-3xl  ">
         <p>
           FathNell est une marque béninoise de maroquinerie d’exception, née d’un amour profond
           pour le cuir, le style et l’élégance affirmée. Chaque pièce que nous créons est pensée

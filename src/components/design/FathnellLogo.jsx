@@ -12,8 +12,15 @@ export const FathnellLogo = ({
   vectorClassName = "",
   baseClassName = "",
 }) => {
+  const handleLogoClick = () => {
+    window.location.href = '/';
+  };
+
   return (
-    <div className={`fathnell-logo ${version} ${color} ${className} `}>
+    <div 
+      className={`fathnell-logo ${version} ${color} ${className} cursor-pointer`}
+      onClick={handleLogoClick}
+    >
       <div className="glyph flex items-center justify-center">
         {vector && <img className={`vector ${vectorClassName}`} alt="Vector" src={vector} />}
         {img && <img className="img" alt="Vector" src={img} />}

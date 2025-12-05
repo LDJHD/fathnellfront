@@ -83,6 +83,7 @@ export default function AjouterArticle({ editMode = false }) {
     const [prix, setPrix] = useState("");
     const [prixPromo, setPrixPromo] = useState("");
     const [enPromo, setEnPromo] = useState(false);
+    const [vedette, setVedette] = useState(false);
     const [collection, setCollection] = useState("");
     const [categorieId, setCategorieId] = useState("");
     const [personnalisable, setPersonnalisable] = useState(false);
@@ -151,6 +152,7 @@ export default function AjouterArticle({ editMode = false }) {
                         setPrix(produit.prix?.toString() || "");
                         setPrixPromo(produit.prix_promo?.toString() || "");
                         setEnPromo(!!produit.en_promo);
+                        setVedette(!!produit.vedette);
                         setCollection(produit.collection_id?.toString() || "");
                         setCategorieId(produit.categorie_id?.toString() || "");
                         setPersonnalisable(!!produit.personnalisable);
@@ -231,6 +233,7 @@ export default function AjouterArticle({ editMode = false }) {
             formData.append('prix', prix);
             formData.append('prix_promo', prixPromo || null);
             formData.append('en_promo', enPromo);
+            formData.append('vedette', vedette);
             formData.append('personnalisable', personnalisable);
             formData.append('stock_status', stockStatus);
             formData.append('collection_id', collection || null);
@@ -279,6 +282,7 @@ export default function AjouterArticle({ editMode = false }) {
         setPrix("");
         setPrixPromo("");
         setEnPromo(false);
+        setVedette(false);
         setCollection("");
         setCategorieId("");
         setPersonnalisable(false);
@@ -436,6 +440,34 @@ export default function AjouterArticle({ editMode = false }) {
                                     </div>
                                 </div>
 
+                                {/* Produit vedette */}
+                                <div className="flex flex-col gap-3">
+                                    <label className="text-lg">Produit vedette :</label>
+                                    <div className="flex items-center gap-4">
+                                        <label className="flex items-center gap-2">
+                                            <input 
+                                                type="radio" 
+                                                name="vedette" 
+                                                checked={!vedette} 
+                                                onChange={() => setVedette(false)} 
+                                            />
+                                            <span>Non</span>
+                                        </label>
+                                        <label className="flex items-center gap-2">
+                                            <input 
+                                                type="radio" 
+                                                name="vedette" 
+                                                checked={vedette} 
+                                                onChange={() => setVedette(true)} 
+                                            />
+                                            <span>Oui</span>
+                                        </label>
+                                    </div>
+                                    <p className="text-sm text-gray-600">
+                                        Les produits vedettes s'affichent dans la section "NOS PRODUITS VEDETTES" de la page d'accueil
+                                    </p>
+                                </div>
+
                                 {/* Description */}
                                 <div className="flex flex-col gap-2">
                                     <label className="text-lg">Description :</label>
@@ -475,7 +507,7 @@ export default function AjouterArticle({ editMode = false }) {
                 </section>
 
                 {/* CARACTÉRISTIQUES - Seulement si personnalisable */}
-                {personnalisable && (
+                
                     <section className="self-stretch px-4">
                         <button
                             onClick={() => setOpenCaracts((s) => !s)}
@@ -577,7 +609,7 @@ export default function AjouterArticle({ editMode = false }) {
                             </div>
                         )}
                     </section>
-                )}
+              
 
                 {/* MEDIAS ET ETAT DU STOCK */}
                 <section className="self-stretch px-4">

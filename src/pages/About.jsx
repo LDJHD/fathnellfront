@@ -11,7 +11,7 @@ import img9 from "../assets/img9.png";
 
 export default function About() {
   return (
-    <div className="w-full flex flex-col items-center bg-white">
+    <div id="apropos" className="w-full flex flex-col items-center bg-white">
       {/* Header bar */}
       <div className="w-full  px-16 py-1 bg-zinc-400 inline-flex justify-start items-center ">
         <div className=" text-center text-black  font-bold font-['Glacial_Indifference'] leading-6">

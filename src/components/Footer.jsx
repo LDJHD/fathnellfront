@@ -18,7 +18,7 @@ const Footer = () => {
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!newsletterEmail) {
       setNewsletterMessage("Veuillez entrer une adresse email");
       return;
@@ -69,7 +69,7 @@ const Footer = () => {
             className="flex-1 p-3 md:w-96 rounded-sm text-neutral-600 text-lg font-normal bg-neutral-200 placeholder-neutral-600 focus:outline-none"
             required
           />
-          <button 
+          <button
             type="submit"
             disabled={newsletterLoading}
             className="px-6 py-2 bg-white text-black font-bold text-base rounded-sm hover:bg-neutral-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -77,7 +77,7 @@ const Footer = () => {
             {newsletterLoading ? "Envoi..." : "Je m'abonne"}
           </button>
         </form>
-        
+
         {newsletterMessage && (
           <p className={`text-sm ${newsletterMessage.includes("✅") ? "text-green-400" : "text-red-400"}`}>
             {newsletterMessage}
@@ -92,19 +92,36 @@ const Footer = () => {
           <h3 className="text-2xl md:text-3xl underline leading-8 mb-4 md:leading-10">Liens rapides</h3>
           <ul className="space-y-10 text-3xl font-normal ">
             {[
-              { label: "Accueil", path: "/" },
-              { label: "A propos", path: "/about" },
-              { label: "Boutique", path: "/boutique" },
-              { label: "Contacts", path: "/contact" },
-              { label: "FAQs", path: "/contact" },
+              { label: "Accueil", path: "/", scrollTo: "accueil" },
+              { label: "A propos", path: "/about", scrollTo: "apropos" },
+              { label: "Boutique", path: "/boutique", scrollTo: "boutique" },
+              { label: "Contacts", path: "/contact", scrollTo: "contact" },
+              { label: "FAQs", path: "/faq", scrollTo: "faq" },
             ].map((item) => (
               <li key={item.label}>
-                <Link 
-                  to={item.path} 
-                  className="cursor-pointer text-white hover:text-red-600 block"
-                >
-                  {item.label}
-                </Link>
+                {item.scrollTo ? (
+                  <span
+                    onClick={() => {
+                      window.location.href = item.path;
+                      setTimeout(() => {
+                        const element = document.getElementById(item.scrollTo);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }, 100);
+                    }}
+                    className="cursor-pointer text-white hover:text-red-600  bg-transparent block text-left"
+                  >
+                    {item.label}
+                  </span>
+                ) : (
+                  <Link
+                    to={item.path}
+                    className="cursor-pointer text-white hover:text-red-600 block"
+                  >
+                    {item.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -123,8 +140,8 @@ const Footer = () => {
               { label: "Produits d'entretiens", path: "/categorie/produits d'entretiens" },
             ].map((item) => (
               <li key={item.label}>
-                <Link 
-                  to={item.path} 
+                <Link
+                  to={item.path}
                   className="cursor-pointer text-white hover:text-red-600 block"
                 >
                   {item.label}
@@ -138,31 +155,31 @@ const Footer = () => {
         <div className="flex flex-col gap-4 w-full sm:w-64">
           <h3 className="text-2xl md:text-3xl underline mb-4 leading-8 md:leading-10">Contacts</h3>
           <div className="flex flex-col gap-3">
-            <div className="flex items-center my-5 gap-6">
-              <img src={phoneIcon} alt="Phone" className="w-6 h-6" />
-              <span>0029 01 99 99 95 15</span>
+            <div className="flex items-center my-7 gap-6">
+              <img src={phoneIcon} alt="Phone" className="w-7 h-7" />
+              <span>00 229 01 99 99 95 15</span>
             </div>
             <WhatsAppButton
-  className="flex items-center gap-3 text-white hover:text-green-400 transition-colors"
-  showIcon={false}
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 32 32"
-    className="w-6 h-6 fill-current"
-  >
-    <path d="M16.001 3.2c-7.033 0-12.8 5.766-12.8 12.8 0 2.257.589 4.455 1.712 6.389L3.2 28.8l6.624-1.715a12.76 12.76 0 0 0 6.177 1.579h.001c7.033 0 12.8-5.767 12.8-12.8s-5.767-12.8-12.8-12.8zm0 23.467h-.001a10.61 10.61 0 0 1-5.393-1.475l-.386-.229-3.93 1.017 1.05-3.833-.252-.394a10.583 10.583 0 0 1-1.638-5.657c0-5.88 4.787-10.667 10.667-10.667S26.667 10.12 26.667 16s-4.787 10.667-10.666 10.667zm5.973-7.893c-.326-.163-1.93-.953-2.23-1.061-.3-.112-.52-.163-.74.163-.214.326-.847 1.06-1.04 1.28-.193.214-.387.244-.713.082-.326-.163-1.378-.508-2.624-1.622-.971-.866-1.63-1.933-1.823-2.259-.192-.326-.02-.5.144-.662.148-.148.326-.387.488-.58.163-.193.214-.326.326-.54.112-.214.05-.407-.025-.57-.082-.163-.74-1.79-1.015-2.453-.267-.64-.54-.553-.74-.553-.192 0-.407-.025-.627-.025-.214 0-.57.082-.866.407-.295.326-1.13 1.105-1.13 2.69 0 1.585 1.158 3.117 1.32 3.333.163.214 2.28 3.48 5.523 4.873.772.333 1.372.53 1.84.68.773.245 1.477.21 2.033.128.62-.093 1.93-.79 2.205-1.552.276-.763.276-1.417.193-1.552-.082-.148-.3-.244-.627-.407z" />
-  </svg>
+              className="flex items-center gap-3 text-white hover:text-green-400  my-7 transition-colors"
+              showIcon={false}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 32"
+                className="w-7 h-7 fill-current"
+              >
+                <path d="M16.001 3.2c-7.033 0-12.8 5.766-12.8 12.8 0 2.257.589 4.455 1.712 6.389L3.2 28.8l6.624-1.715a12.76 12.76 0 0 0 6.177 1.579h.001c7.033 0 12.8-5.767 12.8-12.8s-5.767-12.8-12.8-12.8zm0 23.467h-.001a10.61 10.61 0 0 1-5.393-1.475l-.386-.229-3.93 1.017 1.05-3.833-.252-.394a10.583 10.583 0 0 1-1.638-5.657c0-5.88 4.787-10.667 10.667-10.667S26.667 10.12 26.667 16s-4.787 10.667-10.666 10.667zm5.973-7.893c-.326-.163-1.93-.953-2.23-1.061-.3-.112-.52-.163-.74.163-.214.326-.847 1.06-1.04 1.28-.193.214-.387.244-.713.082-.326-.163-1.378-.508-2.624-1.622-.971-.866-1.63-1.933-1.823-2.259-.192-.326-.02-.5.144-.662.148-.148.326-.387.488-.58.163-.193.214-.326.326-.54.112-.214.05-.407-.025-.57-.082-.163-.74-1.79-1.015-2.453-.267-.64-.54-.553-.74-.553-.192 0-.407-.025-.627-.025-.214 0-.57.082-.866.407-.295.326-1.13 1.105-1.13 2.69 0 1.585 1.158 3.117 1.32 3.333.163.214 2.28 3.48 5.523 4.873.772.333 1.372.53 1.84.68.773.245 1.477.21 2.033.128.62-.093 1.93-.79 2.205-1.552.276-.763.276-1.417.193-1.552-.082-.148-.3-.244-.627-.407z" />
+              </svg>
 
-  <span>Nous contacter via WhatsApp</span>
-</WhatsAppButton>
+              <span>Nous contacter via WhatsApp</span>
+            </WhatsAppButton>
 
-            <div className="flex items-center my-5 gap-6">
-              <img src={mailIcon} alt="Mail" className="w-6 h-6" />
+            <div className="flex items-center my-7 gap-6">
+              <img src={mailIcon} alt="Mail" className="w-7 h-7" />
               <span>fathnell2020@gmail.com</span>
             </div>
-            <div className="flex items-start my-5  gap-6">
-              <img src={mapIcon} alt="Map" className="w-6 h-6 mt-1" />
+            <div className="flex items-start my-7  gap-6">
+              <img src={mapIcon} alt="Map" className="w-7 h-7 mt-1" />
               <span>
                 Agla-Rue du commissariat
                 <br />
@@ -185,7 +202,7 @@ const Footer = () => {
           {[
             { icon: facebookIcon, url: "https://www.facebook.com/FathNell", alt: "Facebook" },
             { icon: instagramIcon, url: "https://www.instagram.com/fathnell_maroquinerie/", alt: "Instagram" },
-            { icon: linkedinIcon, url: "https://www.linkedin.com/checkpoint/challenge/AgEnDo6j_WS9IwAAAZrQyeLfvDyESlSY7O4yguf6JXI26oejCRVN-aRs_RJckZmr6SVBHzb5Kt9SSbLfk2lRuVQRvaZOIg?ut=1i5QZWdL1sKc01", alt: "LinkedIn" },
+            { icon: linkedinIcon, url: "https://www.linkedin.com/in/fathnell-maroquinerie-b5a556194?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app", alt: "LinkedIn" },
             { icon: tiktokIcon, url: "https://www.tiktok.com/@fathnell.maroquinerie?is_from_webapp=1&sender_device=pc", alt: "TikTok" },
           ].map((social, idx) => (
             <a

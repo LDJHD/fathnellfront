@@ -1,4 +1,5 @@
 import { useWishlist } from "../hooks/useWishlist";
+import PromoBadge from "./PromoBadge";
 
 export const ProductCard = ({ id, image, title, price, promo }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -11,21 +12,21 @@ export const ProductCard = ({ id, image, title, price, promo }) => {
 
   return (
     <div 
-      className="group relative bg-white transition mt-5 overflow-hidden cursor-pointer"
+      className="group relative bg-white transition overflow-hidden cursor-pointer"
       onClick={handleProductClick}
     >
       {/* Image du produit */}
-      <div className="relative overflow-hidden rounded-md">
+      <div className="relative overflow-hidden aspect-square md:aspect-auto md:h-72">
         {/* Badge "En promo" */}
         {promo && (
-          <div className="absolute top-2 left-2 bg-red-600 text-white text-sm font-normal font-['Glacial_Indifference'] leading-5 px-3 py-1 rounded-tr-lg rounded-bl-lg z-10">
-            En promo
+          <div className="absolute top-2 left-0 z-10">
+            <PromoBadge />
           </div>
         )}
 
         {/* Icône cœur */}
         <button
-          className="absolute top-2 right-2 bg-white p-2 border border-black rounded-sm hover:scale-110 transition z-10"
+          className="absolute top-2 right-2 bg-white p-1 md:p-2 border border-black rounded-sm hover:scale-110 transition z-10"
           aria-label={isInWishlist(id) ? "Retirer de la liste de souhaits" : "Ajouter à la liste de souhaits"}
           onClick={async (e) => {
             e.stopPropagation();
@@ -54,7 +55,7 @@ export const ProductCard = ({ id, image, title, price, promo }) => {
         <img
           src={image}
           alt={title}
-          className="w-full h-72 object-cover transition-transform duration-500 ease-in-out group-hover:scale-95 group-hover:brightness-90"
+          className="w-full h-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-95 group-hover:brightness-90"
         />
       </div>
 

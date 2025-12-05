@@ -213,6 +213,19 @@
 .seach-icon .icon .img { width: 18px; height: 18px; object-fit: contain; }
 .placeholder-contenair { border-bottom: 1px solid var(--fh-colornoir-fnnoir-principal); outline: none; width: 140px; background-color: white; color:black;}
 
+/* Mobile search without border */
+.design-component-instance-node-mobile { 
+  border: none !important; 
+  border-bottom: none !important; 
+  outline: none; 
+  width: 100% !important; 
+  background-color: white; 
+  color: black;
+  padding: 8px 12px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive helpers for navbar integration */
 .nav-bar-test { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;  margin: 0 auto; padding: 8px 16px; }
 .nav-bar-links { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }

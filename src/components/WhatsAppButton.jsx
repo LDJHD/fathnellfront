@@ -14,7 +14,13 @@ export const WhatsAppButton = ({
     const url = generateWhatsAppURL(message);
     
     if (url !== "#") {
-      window.open(url, '_blank');
+      // Utiliser window.location.href au lieu de window.open pour éviter les bloqueurs de popup
+      // Sauvegarder l'URL actuelle pour permettre le retour
+      const currentUrl = window.location.href;
+      sessionStorage.setItem('whatsapp_return_url', currentUrl);
+      
+      // Ouvrir WhatsApp dans le même onglet
+      window.location.href = url;
     } else {
       alert("⚠️ Configuration WhatsApp manquante. Contactez l'administrateur.");
     }

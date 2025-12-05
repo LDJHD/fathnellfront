@@ -3,27 +3,12 @@ import heroImage from "../assets/hero-image.jpg";
 import { SloganFat } from "../components/SloganFat";
 import { FeaturedProducts } from "../components/FeaturedProducts";
 import { Testimonials } from "../components/Testimonials";
+import BanniereCarousel from "../components/BanniereCarousel";
 export default function Home() {
   return (
-    <div className="text-center">
-      <div
-        className="w-full h-[200px]  md:h-[700px] relative overflow-hidden bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
-        <div className="absolute  md:right-10 right-2 bottom-0  md:top-[573px] p-1.5 inline-flex justify-center items-center gap-2.5">
-          <div className="flex text-end w-full text-white md:text-4xl font-bold ">
-            <button
-              className="p-1.5 inline-flex justify-center items-center  bg-inherit underline hover:bg-neutral-800 transition"
-              onClick={() => window.location.href = '/boutique'}
-            >
-              <span className=" flex text-center  text-white text-sm md:text-4xl font-bold font-['Glacial_Indifference']  leading-[52px]">
-                ALLER EN BOUTIQUE
-              </span>
-            </button>
+    <div id="accueil" className="text-center">
+      <BanniereCarousel />
 
-          </div>
-        </div>
-      </div>
       <div className=" ">
         <main className="flex flex-col min-h-screen bg-white">
           <SloganFat />

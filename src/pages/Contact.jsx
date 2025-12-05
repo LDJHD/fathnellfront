@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import img11 from "../assets/img11.png";
+import img11 from "../assets/contact.png";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -54,7 +54,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center bg-white  ">
+    <div id="contact" className="w-full flex flex-col items-center bg-white  ">
 
   {/* ---------- BANDEAU HAUT ---------- */}
   <div className="w-full px-16 py-1 bg-zinc-400 flex items-center">

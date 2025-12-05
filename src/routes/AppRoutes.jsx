@@ -3,6 +3,7 @@ import Home from "../pages/Home";
 import Contact from "../pages/Contact";
 import MainLayout from "../layouts/MainLayouts";
 import About from "../pages/About";
+import FAQ from "../pages/FAQ";
 import Boutique from "../pages/Boutique";
 import ListeSouhait from "../pages/ListeSouhait";
 import Panier from "../pages/Panier";
@@ -20,6 +21,7 @@ import CategorieDashboard from "../pages/dashboard/Categorie";
 import AjouterCategorie from "../pages/dashboard/AjouterCategorie";
 import Collection from "../pages/dashboard/Collection";
 import ModifierCollection from "../pages/dashboard/ModifierCollection";
+import GestionBannieres from "../pages/dashboard/GestionBannieres";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 
@@ -37,6 +39,7 @@ export default function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/boutique" element={<Boutique />} />
           <Route path="/liste-souhait" element={<ListeSouhait />} />
           <Route path="/panier" element={<Panier />} />
@@ -61,8 +64,7 @@ export default function AppRoutes() {
           <Route path="/dashboard/categories" element={<CategorieDashboard />} />
           <Route path="/dashboard/ajouter-categorie" element={<AjouterCategorie />} />
           <Route path="/dashboard/modifier-categorie/:id" element={<AjouterCategorie editMode={true} />} />
-
-
+          <Route path="/dashboard/bannieres" element={<GestionBannieres />} />
 
           {/* tu peux ajouter d'autres pages du dashboard ici */}
         </Route>

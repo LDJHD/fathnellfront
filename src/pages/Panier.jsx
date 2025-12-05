@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import img12 from "../assets/img12.png";
 import { Trash2 } from "lucide-react";
 import { panierAPI, commandesAPI } from "../services/api";
@@ -6,6 +7,7 @@ import { CONFIG, generateWhatsAppURL } from "../config/config";
 import { usePanier } from "../hooks/usePanier";
 
 export default function Panier() {
+  const navigate = useNavigate();
   const [panier, setPanier] = useState({
     articles_non_personnalises: [],
     articles_personnalises: [],
@@ -83,6 +85,9 @@ export default function Panier() {
         let articlesPourMessage = articles;
         if (articles.length === 0) {
           console.log("⚠️ Aucun article dans la réponse, utilisation du panier actuel");
+          const nonCustom = panier.articles_non_personnalises || [];
+          const custom = panier.articles_personnalises || [];
+          
           articlesPourMessage = [
             ...nonCustom.map(item => ({
               produit_nom: item.produit_nom,
@@ -92,7 +97,8 @@ export default function Panier() {
               personnalise: false,
               couleur: item.couleur_nom || null,
               taille: item.taille_nom || null,
-              taille_type: item.taille_type || null
+              taille_type: item.taille_type || null,
+              texte_personnalisation: item.texte_personnalisation || null
             })),
             ...custom.map(item => ({
               produit_nom: item.produit_nom,
@@ -102,7 +108,10 @@ export default function Panier() {
               personnalise: true,
               couleur: item.couleur_nom || null,
               taille: item.taille_nom || null,
-              taille_type: item.taille_type || null
+              taille_type: item.taille_type || null,
+              matiere: item.matiere || null,
+              gravure: item.gravure || null,
+              texte_personnalisation: item.texte_personnalisation || null
             }))
           ];
         }
@@ -110,7 +119,7 @@ export default function Panier() {
         console.log("📦 Articles pour le message:", articlesPourMessage);
         
         // Vérifier s'il y a des articles personnalisés
-        const hasCustomItems = articlesPourMessage.some(article => article.personnalise) || custom.length > 0;
+        const hasCustomItems = articlesPourMessage.some(article => article.personnalise) || (panier.articles_personnalises && panier.articles_personnalises.length > 0);
         
         // Générer le message WhatsApp approprié avec les détails des articles
         const message = hasCustomItems 
@@ -123,7 +132,12 @@ export default function Panier() {
         const whatsappUrl = generateWhatsAppURL(message);
         
         if (whatsappUrl !== "#") {
-          window.open(whatsappUrl, '_blank');
+          // Sauvegarder l'URL actuelle pour permettre le retour
+          const currentUrl = window.location.href;
+          sessionStorage.setItem('whatsapp_return_url', currentUrl);
+          
+          // Utiliser window.location.href pour éviter les bloqueurs de popup
+          window.location.href = whatsappUrl;
         } else {
           alert("⚠️ Configuration WhatsApp manquante. Contactez l'administrateur.");
         }
@@ -247,7 +261,10 @@ export default function Panier() {
                 </div>
 
                 {/* Modifier */}
-                <button className="px-4 sm:px-6 py-2 bg-black text-white font-bold text-base rounded-sm">
+                <button 
+                  onClick={() => navigate(`/produit/${item.produit_id}`)}
+                  className="px-4 sm:px-6 py-2 bg-black text-white font-bold text-base rounded-sm hover:bg-gray-800 transition-colors"
+                >
                   Modifier
                 </button>
 
@@ -322,9 +339,12 @@ export default function Panier() {
                   </button>
                 </div>
 
-                {/* Prix à définir */}
-                <button className="px-4 sm:px-6 py-2 border border-red-600 bg-white text-red-600 font-bold text-base rounded-sm">
-                  Prix à définir
+                {/* Modifier */}
+                <button 
+                  onClick={() => navigate(`/produit/${item.produit_id}`)}
+                  className="px-4 sm:px-6 py-2 bg-black text-white font-bold text-base rounded-sm hover:bg-gray-800 transition-colors"
+                >
+                  Modifier
                 </button>
 
                 {/* Trash */}

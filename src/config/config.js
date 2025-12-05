@@ -5,91 +5,195 @@ export const CONFIG = {
     // Remplacez par votre numéro WhatsApp au format international (sans le +)
     // Exemple: pour +33 6 12 34 56 78, mettez "33612345678"
     // Exemple: pour +229 XX XX XX XX, mettez "229XXXXXXXX"
-    PHONE_NUMBER: "22967357728", // À REMPLACER par votre vraie numéro
+    PHONE_NUMBER: "22967357728", // À REMPLACER par votre vraie numéro 22999999515
     
     // Messages prédéfinis
     MESSAGES: {
       ORDER: (numeroCommande, montant, articles = []) => {
         console.log("📱 Génération message ORDER avec articles:", articles);
-        let message = `Bonjour ! 👋\n\nJe souhaite finaliser ma commande FathNell :\n\n`;
-        message += `🔖 Numéro de commande : ${numeroCommande}\n`;
-        message += `💰 Montant total : ${montant} XOF\n\n`;
+        let message = `Bonjour FathNell,
+
+Je souhaite finaliser ma commande. Voici les détails :
+
+`;
         
-        // Toujours afficher les détails si des articles sont fournis
-        if (articles && Array.isArray(articles) && articles.length > 0) {
-          message += `📦 DÉTAILS DE LA COMMANDE :\n\n`;
-          articles.forEach((article, index) => {
+        // Séparer les articles personnalisés et non personnalisés
+        const articlesNonPersonnalises = articles.filter(article => !article.personnalise);
+        const articlesPersonnalises = articles.filter(article => article.personnalise);
+        
+        // Articles sans personnalisation
+        if (articlesNonPersonnalises.length > 0) {
+          message += `Articles sans personnalisation :
+`;
+          articlesNonPersonnalises.forEach((article) => {
             const nomProduit = article.produit_nom || article.nom || 'Produit sans nom';
-            message += `${index + 1}. ${nomProduit}\n`;
-            message += `   • Quantité : ${article.quantite || 1}\n`;
-            if (article.personnalise) {
-              message += `   • Prix : À définir (article personnalisé)\n`;
-            } else {
-              const prixUnitaire = typeof article.prix_unitaire === 'number' 
-                ? article.prix_unitaire.toLocaleString() 
-                : parseFloat(article.prix_unitaire || 0).toLocaleString();
-              const prixTotal = typeof article.prix_total === 'number'
-                ? article.prix_total.toLocaleString()
-                : parseFloat(article.prix_total || 0).toLocaleString();
-              message += `   • Prix unitaire : ${prixUnitaire} XOF\n`;
-              message += `   • Prix total : ${prixTotal} XOF\n`;
-            }
+            const quantite = article.quantite || 1;
+            message += `${nomProduit}
+`;
             if (article.couleur) {
-              message += `   • Couleur : ${article.couleur}\n`;
+              message += `Couleur : ${article.couleur}
+`;
             }
             if (article.taille) {
-              message += `   • Taille : ${article.taille}${article.taille_type ? ` (${article.taille_type})` : ''}\n`;
+              message += `Taille : ${article.taille}
+`;
             }
-            message += `\n`;
+            if (article.texte_personnalisation) {
+              message += `Personnalisation : "${article.texte_personnalisation}"
+`;
+            }
+            message += `Quantité : ${quantite}
+`;
+            const prixUnitaire = typeof article.prix_unitaire === 'number' 
+              ? article.prix_unitaire.toLocaleString() 
+              : parseFloat(article.prix_unitaire || 0).toLocaleString();
+            message += `Prix : ${prixUnitaire} FCFA
+
+`;
           });
-        } else {
-          console.warn("⚠️ Aucun article fourni pour le message ORDER");
         }
         
-        message += `Merci de me confirmer les détails de livraison et de paiement.\n\n`;
-        message += `Cordialement`;
+        // Articles avec personnalisation
+        if (articlesPersonnalises.length > 0) {
+          message += `Articles avec personnalisation :
+
+`;
+          articlesPersonnalises.forEach((article) => {
+            const nomProduit = article.produit_nom || article.nom || 'Produit sans nom';
+            const quantite = article.quantite || 1;
+            message += `${nomProduit}
+`;
+            if (article.couleur) {
+              message += `Couleur : ${article.couleur}
+`;
+            }
+            if (article.matiere) {
+              message += `Matière : ${article.matiere}
+`;
+            }
+            if (article.gravure) {
+              message += `Gravure : ${article.gravure}
+`;
+            }
+            if (article.texte_personnalisation) {
+              message += `Personnalisation : "${article.texte_personnalisation}"
+`;
+            }
+            message += `Quantité : ${quantite}
+`;
+            message += `Prix : à définir
+
+`;
+          });
+        }
+        
+        // Calcul du total pour les articles non personnalisés
+        if (articlesNonPersonnalises.length > 0) {
+          const totalNonPersonnalises = articlesNonPersonnalises.reduce((total, article) => {
+            const prix = typeof article.prix_unitaire === 'number' ? article.prix_unitaire : parseFloat(article.prix_unitaire || 0);
+            const quantite = article.quantite || 1;
+            return total + (prix * quantite);
+          }, 0);
+          message += `Montant total (articles sans personnalisation) : ${totalNonPersonnalises.toLocaleString()} FCFA
+
+`;
+        }
+        
+        message += `Merci de me confirmer le prix total et le délai de livraison.`;
         return message;
       },
         
       CUSTOM_ORDER: (numeroCommande, articles = []) => {
         console.log("📱 Génération message CUSTOM_ORDER avec articles:", articles);
-        let message = `Bonjour ! 👋\n\nJe souhaite finaliser ma commande FathNell avec des articles personnalisés :\n\n`;
-        message += `🔖 Numéro de commande : ${numeroCommande}\n`;
-        message += `⚠️ Cette commande contient des articles personnalisés (prix à définir)\n\n`;
+        let message = `Bonjour FathNell,
+
+Je souhaite finaliser ma commande. Voici les détails :
+
+`;
         
-        // Toujours afficher les détails si des articles sont fournis
-        if (articles && Array.isArray(articles) && articles.length > 0) {
-          message += `📦 DÉTAILS DE LA COMMANDE :\n\n`;
-          articles.forEach((article, index) => {
+        // Séparer les articles personnalisés et non personnalisés
+        const articlesNonPersonnalises = articles.filter(article => !article.personnalise);
+        const articlesPersonnalises = articles.filter(article => article.personnalise);
+        
+        // Articles sans personnalisation
+        if (articlesNonPersonnalises.length > 0) {
+          message += `Articles sans personnalisation :
+`;
+          articlesNonPersonnalises.forEach((article) => {
             const nomProduit = article.produit_nom || article.nom || 'Produit sans nom';
-            message += `${index + 1}. ${nomProduit}\n`;
-            message += `   • Quantité : ${article.quantite || 1}\n`;
-            if (article.personnalise) {
-              message += `   • Prix : À définir (article personnalisé)\n`;
-            } else {
-              const prixUnitaire = typeof article.prix_unitaire === 'number' 
-                ? article.prix_unitaire.toLocaleString() 
-                : parseFloat(article.prix_unitaire || 0).toLocaleString();
-              const prixTotal = typeof article.prix_total === 'number'
-                ? article.prix_total.toLocaleString()
-                : parseFloat(article.prix_total || 0).toLocaleString();
-              message += `   • Prix unitaire : ${prixUnitaire} XOF\n`;
-              message += `   • Prix total : ${prixTotal} XOF\n`;
-            }
+            const quantite = article.quantite || 1;
+            message += `${nomProduit}
+`;
             if (article.couleur) {
-              message += `   • Couleur : ${article.couleur}\n`;
+              message += `Couleur : ${article.couleur}
+`;
             }
             if (article.taille) {
-              message += `   • Taille : ${article.taille}${article.taille_type ? ` (${article.taille_type})` : ''}\n`;
+              message += `Taille : ${article.taille}
+`;
             }
-            message += `\n`;
+            if (article.texte_personnalisation) {
+              message += `Personnalisation : "${article.texte_personnalisation}"
+`;
+            }
+            message += `Quantité : ${quantite}
+`;
+            const prixUnitaire = typeof article.prix_unitaire === 'number' 
+              ? article.prix_unitaire.toLocaleString() 
+              : parseFloat(article.prix_unitaire || 0).toLocaleString();
+            message += `Prix : ${prixUnitaire} FCFA
+
+`;
           });
-        } else {
-          console.warn("⚠️ Aucun article fourni pour le message CUSTOM_ORDER");
         }
         
-        message += `Merci de me contacter pour finaliser les détails.\n\n`;
-        message += `Cordialement`;
+        // Articles avec personnalisation
+        if (articlesPersonnalises.length > 0) {
+          message += `Articles avec personnalisation :
+
+`;
+          articlesPersonnalises.forEach((article) => {
+            const nomProduit = article.produit_nom || article.nom || 'Produit sans nom';
+            const quantite = article.quantite || 1;
+            message += `${nomProduit}
+`;
+            if (article.couleur) {
+              message += `Couleur : ${article.couleur}
+`;
+            }
+            if (article.matiere) {
+              message += `Matière : ${article.matiere}
+`;
+            }
+            if (article.gravure) {
+              message += `Gravure : ${article.gravure}
+`;
+            }
+            if (article.texte_personnalisation) {
+              message += `Personnalisation : "${article.texte_personnalisation}"
+`;
+            }
+            message += `Quantité : ${quantite}
+`;
+            message += `Prix : à définir
+
+`;
+          });
+        }
+        
+        // Calcul du total pour les articles non personnalisés seulement
+        if (articlesNonPersonnalises.length > 0) {
+          const totalNonPersonnalises = articlesNonPersonnalises.reduce((total, article) => {
+            const prix = typeof article.prix_unitaire === 'number' ? article.prix_unitaire : parseFloat(article.prix_unitaire || 0);
+            const quantite = article.quantite || 1;
+            return total + (prix * quantite);
+          }, 0);
+          message += `Montant total (articles sans personnalisation) : ${totalNonPersonnalises.toLocaleString()} FCFA
+
+`;
+        }
+        
+        message += `Merci de me confirmer le prix total et le délai de livraison.`;
         return message;
       },
         

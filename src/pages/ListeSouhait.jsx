@@ -84,21 +84,21 @@ export default function ListeSouhait() {
     <div className="w-full flex flex-col items-center bg-white pb-20">
 
       {/* HEADER */}
-      <div className="w-full h-8 px-16 py-1 bg-zinc-400 flex items-center">
-        <div className="text-black text-base font-bold font-['Glacial_Indifference']">
+      <div className="w-full h-8 px-4 md:px-16 py-1 bg-zinc-400 flex items-center">
+        <div className="text-black text-sm md:text-base font-bold font-['Glacial_Indifference']">
           LISTE DE SOUHAITS
         </div>
       </div>
 
       {/* TITLE */}
-      <div className="p-2 mt-20 text-center">
-        <div className="text-black text-4xl font-bold font-['Glacial_Indifference'] underline leading-[52px]">
+      <div className="p-2 mt-10 md:mt-20 text-center">
+        <div className="text-black text-2xl md:text-4xl font-bold font-['Glacial_Indifference'] underline leading-8 md:leading-[52px]">
           Ma liste de souhaits:
         </div>
       </div>
 
       {/* CONTENT */}
-      <div className="w-full max-w-[1204px] mt-10 flex flex-col gap-6 px-4 md:px-10">
+      <div className="w-full max-w-[1204px] mt-6 md:mt-10 flex flex-col gap-4 md:gap-6 px-4 md:px-10">
         {loading ? (
           <div className="text-center py-8">
             <div className="text-black text-xl font-['Glacial_Indifference']">
@@ -123,36 +123,36 @@ export default function ListeSouhait() {
                 <img
                   src={imageUrl}
                   alt={item.produit_nom}
-                  className="w-24 h-20 rounded-sm object-cover cursor-pointer"
+                  className="w-16 h-12 sm:w-20 sm:h-16 md:w-24 md:h-20 rounded-sm object-cover cursor-pointer"
                   onClick={() => handleProduitClick(item.produit_id)}
                 />
 
                 {/* NAME + PRICE */}
-                <div className="flex flex-col items-start flex-1 min-w-[150px]">
+                <div className="flex flex-col items-start flex-1 min-w-0 px-2">
                   <div 
-                    className="text-primary-base text-sm text-black md:text-lg font-['Glacial_Indifference'] cursor-pointer hover:underline"
+                    className="text-black text-xs sm:text-sm md:text-lg font-['Glacial_Indifference'] cursor-pointer hover:underline truncate w-full"
                     onClick={() => handleProduitClick(item.produit_id)}
                   >
                     {item.produit_nom}
                   </div>
-                  <div className="text-primary-base text-sm text-black md:text-lg font-['Glacial_Indifference']">
+                  <div className="text-black text-xs sm:text-sm md:text-lg font-['Glacial_Indifference']">
                     {item.en_promo ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-400 line-through text-sm">
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <span className="text-gray-400 line-through text-xs">
                           {formatPrix(item.produit_prix)} xof
                         </span>
-                        <span className="text-red-600 font-bold">
+                        <span className="text-red-600 font-bold text-xs sm:text-sm">
                           {formatPrix(item.prix_promo)} xof
                         </span>
                       </div>
                     ) : (
-                      <span>{formatPrix(prix)} xof</span>
+                      <span className="text-xs sm:text-sm">{formatPrix(prix)} xof</span>
                     )}
                   </div>
                 </div>
 
                 {/* STATUS */}
-                <div className={`text-primary-base text-xs md:text-lg font-['Glacial_Indifference'] font-semibold ${getStockStatusColor(item.stock_status)}`}>
+                <div className={`text-xs sm:text-sm md:text-lg font-['Glacial_Indifference'] font-semibold ${getStockStatusColor(item.stock_status)} hidden sm:block`}>
                   {getStockStatusText(item.stock_status)}
                 </div>
 
@@ -160,21 +160,21 @@ export default function ListeSouhait() {
                 <button
                   disabled={!isAvailable || ajoutEnCours[item.produit_id]}
                   onClick={() => handleAcheter(item)}
-                  className={`px-3 md:px-6 py-1 md:py-2 rounded-sm font-['Glacial_Indifference'] font-bold 
-                       text-xs md:text-base leading-6
-                ${isAvailable && !ajoutEnCours[item.produit_id] 
-                  ? "bg-black text-white hover:bg-gray-800" 
-                  : "bg-zinc-400 text-white cursor-not-allowed"}`}
+                  className={`px-2 sm:px-3 md:px-6 py-1 sm:py-2 rounded-sm font-['Glacial_Indifference'] font-bold 
+                           text-xs sm:text-sm md:text-base
+                    ${isAvailable && !ajoutEnCours[item.produit_id] 
+                      ? "bg-black text-white hover:bg-gray-800" 
+                      : "bg-zinc-400 text-white cursor-not-allowed"}`}
                 >
                   {ajoutEnCours[item.produit_id] ? "Ajout..." : "Acheter"}
                 </button>
 
                 {/* TRASH ICON */}
                 <div 
-                  className="w-8 h-8 flex justify-center items-center cursor-pointer hover:scale-110 transition"
+                  className="w-6 h-6 sm:w-8 sm:h-8 flex justify-center items-center cursor-pointer hover:scale-110 transition"
                   onClick={() => handleRemove(item.produit_id)}
                 >
-                  <Trash2 size={18} className="text-black" />
+                  <Trash2 size={16} className="text-black sm:w-[18px] sm:h-[18px]" />
                 </div>
               </div>
             );
@@ -185,16 +185,16 @@ export default function ListeSouhait() {
             <img
               src={emptyIcon}
               alt="empty wishlist"
-              className="w-36 h-36 object-contain"
+              className="w-24 h-24 md:w-36 md:h-36 object-contain"
             />
 
-            <div className="text-center mt-6 leading-10 font-['Glacial_Indifference']">
-              <span className="text-black text-3xl font-normal">
+            <div className="text-center mt-6 leading-6 md:leading-10 font-['Glacial_Indifference']">
+              <span className="text-black text-lg md:text-3xl font-normal">
                 Aucun article n'a encore été ajouté à votre sélection.<br />
                 Découvrez nos collections et trouvez vos coups de cœur
               </span>
               <span 
-                className="text-red-600 text-3xl font-normal cursor-pointer hover:underline"
+                className="text-red-600 text-lg md:text-3xl font-normal cursor-pointer hover:underline"
                 onClick={() => navigate('/categorie')}
               > ici.</span>
             </div>

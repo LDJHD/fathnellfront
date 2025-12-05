@@ -3,28 +3,28 @@ import React, { useState } from "react";
 const testimonials = [
   {
     id: 1,
-    name: "Nom du client 1",
+    name: "Mr André",
     text: "Franchement, vos articles, c'est de la pure pépite. j'ai pris une pochette que j'ai pris bientôt 3 ans et c'est resté pareil.",
   },
   {
     id: 2,
-    name: "Nom du client 2",
-    text: "Franchement, vos articles, c'est de la pure pépite. j'ai pris une pochette que j'ai pris bientôt 3 ans et c'est resté pareil.",
+    name: "Mme Florence",
+    text: "Oh, vos sacs, c’est vraiment de la qualité. Je l’avais pris pour une sortie, toutes mes copines le voulaient, et il est toujours comme neuf.",
   },
   {
     id: 3,
-    name: "Nom du client 3",
-    text: "Franchement, vos articles, c'est de la pure pépite. j'ai pris une pochette que j'ai pris bientôt 3 ans et c'est resté pareil.",
+    name: "Mle Benedicte",
+    text: "Franchement, vos produits d’entretien font vraiment la différence.Depuis que je les utilise, mes articles gardent leur aspect d’origine.",
   },
   {
     id: 4,
-    name: "Nom du client 4",
-    text: "Franchement, vos articles, c'est de la pure pépite. j'ai pris une pochette que j'ai pris bientôt 3 ans et c'est resté pareil.",
+    name: "T.Frejus",
+    text: "Vos chaussures sont d’une solidité incroyable.Je les porte depuis longtemps et elles n’ont absolument pas vieilli.",
   },
   {
     id: 5,
-    name: "Nom du client 5",
-    text: "Franchement, vos articles, c'est de la pure pépite. j'ai pris une pochette que j'ai pris bientôt 3 ans et c'est resté pareil.",
+    name: "Mme Anna",
+    text: "Vos bracelets sont d’une finition impeccable ,toujours aussi élégant , je passerai en prendre d'autre en boutique.",
   },
 ];
 

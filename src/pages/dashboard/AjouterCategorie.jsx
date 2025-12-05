@@ -62,6 +62,7 @@ export default function AjouterCategorie({ editMode = false }) {
   const [nom, setNom] = useState("");
   const [description, setDescription] = useState("");
   const [parentId, setParentId] = useState("");
+  const [banniere, setBanniere] = useState(null);
   const [categoriesParent, setCategoriesParent] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -118,18 +119,21 @@ export default function AjouterCategorie({ editMode = false }) {
     setLoading(true);
 
     try {
-      const data = {
-        nom: nom.trim(),
-        description: description.trim() || null,
-        parent_id: parentId || null
-      };
+      const formData = new FormData();
+      formData.append('nom', nom.trim());
+      formData.append('description', description.trim() || '');
+      formData.append('parent_id', parentId || '');
+      
+      if (banniere) {
+        formData.append('banniere', banniere);
+      }
 
       let response;
       if (editMode && categorieId) {
-        data.id = categorieId;
-        response = await categoriesAPI.update(data);
+        formData.append('id', categorieId);
+        response = await categoriesAPI.update(formData);
       } else {
-        response = await categoriesAPI.create(data);
+        response = await categoriesAPI.create(formData);
       }
       
       if (response.ok) {
@@ -138,6 +142,7 @@ export default function AjouterCategorie({ editMode = false }) {
           setNom("");
           setDescription("");
           setParentId("");
+          setBanniere(null);
         }
       } else {
         const errorData = await response.json();
@@ -222,6 +227,25 @@ export default function AjouterCategorie({ editMode = false }) {
           <p className="text-sm text-gray-600 mt-1">
             Laisser vide pour créer une catégorie principale
           </p>
+        </div>
+
+        {/* Bannière de catégorie */}
+        <div className="flex flex-col">
+          <label className="p-2 text-black text-lg">Bannière de catégorie (optionnelle)</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setBanniere(e.target.files[0])}
+            className="w-full px-3 py-2 border bg-white border-gray-400 rounded text-black text-base"
+          />
+          <p className="text-sm text-gray-600 mt-1">
+            Image qui s'affichera en haut de la page catégorie (JPG, PNG, GIF, WEBP - max 5MB)
+          </p>
+          {banniere && (
+            <p className="text-sm text-green-600 mt-1">
+              ✓ Fichier sélectionné : {banniere.name}
+            </p>
+          )}
         </div>
 
         {/* Boutons */}

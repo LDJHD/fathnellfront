@@ -12,6 +12,7 @@ import {
   LogOut,
   Menu,
   X,
+  Image as ImageIcon,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -102,6 +103,18 @@ export default function Sidebar() {
             <div className="w-full p-2 flex items-center gap-2 text-neutral-700 cursor-pointer">
               <Mail className="w-5 h-5" />
               <span className="text-sm">Newsletter</span>
+            </div>
+
+            <div 
+              onClick={() => navigate("/dashboard/bannieres")}
+              className={`w-full p-2 rounded flex items-center gap-2 cursor-pointer ${
+                isActive("/dashboard/bannieres") ? "bg-white" : "text-neutral-700"
+              }`}
+            >
+              <ImageIcon className="w-5 h-5" />
+              <span className={`${isActive("/dashboard/bannieres") ? "font-bold text-black" : "text-sm"}`}>
+                Gestion des bannières
+              </span>
             </div>
           </div>
         </div>

@@ -11,9 +11,7 @@ export const FeaturedProducts = () => {
   // Charger les produits vedettes
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await produitsAPI.getAll({ 
-        limit: 8,  // Prendre d'abord les produits en promo
-      });
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/produit/vedettes?limit=8`);
       
       if (response.ok) {
         const data = await response.json();
@@ -45,7 +43,7 @@ export const FeaturedProducts = () => {
 
   return (
     <section className="px-3 py-5  md:py-12 bg-white">
-      <h1 className="self-stretch text-center mb-10 justify-start text-black md:text-4xl text-xl font-bold font-['Glacial_Indifference'] leading-[52px]">NOS PRODUITS VEDETTES</h1>
+      <h1 className="self-stretch text-center mb-12 justify-start text-black md:text-4xl text-xl font-bold font-['Glacial_Indifference'] leading-[52px]">NOS PRODUITS VEDETTES</h1>
       
       {loading ? (
         <div className="text-center py-8">
@@ -60,7 +58,7 @@ export const FeaturedProducts = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-w-7xl md:max-w-[1550px] mx-auto">
           {products.map((product, index) => (
             <ProductCard key={product.id || index} {...product} />
           ))}

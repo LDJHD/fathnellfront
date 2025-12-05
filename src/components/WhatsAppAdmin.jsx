@@ -8,7 +8,14 @@ export const WhatsAppAdmin = () => {
   const handleTestWhatsApp = () => {
     const url = generateWhatsAppURL(testMessage);
     if (url !== "#") {
-      window.open(url, '_blank');
+      // Pour les tests admin, on peut garder window.open mais avec une approche plus robuste
+      const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+        // Si le popup est bloqué, proposer une alternative
+        if (confirm("Le popup WhatsApp semble bloqué. Voulez-vous ouvrir WhatsApp dans cet onglet ?")) {
+          window.location.href = url;
+        }
+      }
     } else {
       alert("Configuration WhatsApp non valide");
     }
@@ -17,13 +24,23 @@ export const WhatsAppAdmin = () => {
   const handleTestOrderMessage = () => {
     const message = CONFIG.WHATSAPP.MESSAGES.ORDER("CMD-20241212-123456", 50000);
     const url = generateWhatsAppURL(message);
-    window.open(url, '_blank');
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      if (confirm("Le popup WhatsApp semble bloqué. Voulez-vous ouvrir WhatsApp dans cet onglet ?")) {
+        window.location.href = url;
+      }
+    }
   };
 
   const handleTestCustomMessage = () => {
     const message = CONFIG.WHATSAPP.MESSAGES.CUSTOM_ORDER("CMD-20241212-123456");
     const url = generateWhatsAppURL(message);
-    window.open(url, '_blank');
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+      if (confirm("Le popup WhatsApp semble bloqué. Voulez-vous ouvrir WhatsApp dans cet onglet ?")) {
+        window.location.href = url;
+      }
+    }
   };
 
   return (

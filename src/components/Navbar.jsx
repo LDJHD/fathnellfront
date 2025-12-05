@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SearchBar } from "./design/SearchBar";
 import { Link as MenuLink } from "./design/Link";
@@ -13,6 +13,7 @@ import "./design/style.css";
 
 export default function Navbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { wishlistItems } = useWishlist();
@@ -43,7 +44,8 @@ export default function Navbar() {
 
   const chaussuresDropdownItems = [
     { label: "Chaussures hommes", href: "/categorie/chaussures hommes" },
-    { label: "Chaussures femmes", href: "/categorie/chaussures femmes" }
+    { label: "Chaussures femmes", href: "/categorie/chaussures femmes" },
+    { label: "Chaussures enfants", href: "/categorie/chaussures enfants" }
   ];
 
   const ceinturesDropdownItems = [
@@ -74,6 +76,35 @@ export default function Navbar() {
   const closeDrawer = () => {
     setDrawerOpen(false);
   };
+
+  const closeSearch = () => {
+    setSearchOpen(false);
+  };
+
+  // Close search when clicking outside or pressing escape
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchOpen && !event.target.closest('.mobile-search-container')) {
+        closeSearch();
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && searchOpen) {
+        closeSearch();
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [searchOpen]);
 
   return (
     <nav className="bg-white w-full relative z-50 border-b font-['Glacial_Indifference'] text-lg border-gray-200">
@@ -212,33 +243,49 @@ export default function Navbar() {
       </div>
 
       {/* Mobile header */}
-      <div className="flex items-center justify-between px-4 py-3 md:hidden h-16">
-        {/* Hamburger */}
-        <button
-          onClick={toggleDrawer}
-          className="p-2 rounded-md hover:bg-gray-100 transition-colors"
-          aria-label="Menu"
-        >
-          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+      <div className="flex items-center justify-between px-4 py-3 md:hidden h-16 relative">
+        {/* Left side - Hamburger and Search */}
+        <div className="flex items-center gap-2">
+          {/* Hamburger */}
+          <button
+            onClick={toggleDrawer}
+            className="p-2 rounded-md hover:bg-gray-100 bg-white transition-colors"
+            aria-label="Menu"
+          >
+            <svg className="w-6 h-6 bg-white text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
 
-        {/* Logo */}
-        <FathnellLogo
-          className="fathnell-logo-2 scale-75"
-          baseClassName="fathnell-logo-3"
-          vectorClassName="fathnell-logo-instance"
-          color="black"
-          version="full"
-          img={new URL("../assets/Glyph.svg", import.meta.url).href}
-          base={new URL("../assets/base.svg", import.meta.url).href}
-        />
+          {/* Search Icon */}
+          <button 
+            onClick={() => setSearchOpen(!searchOpen)}
+            className="cursor-pointer p-2 bg-white"
+            aria-label="Rechercher"
+          >
+            <svg className="w-6 h-6 bg-white text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Icons */}
-        <div className="icon-2 flex items-center scale-150 gap-2">
+        {/* Logo - Centré absolument */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <FathnellLogo
+            className="fathnell-logo-2 scale-75"
+            baseClassName="fathnell-logo-3"
+            vectorClassName="fathnell-logo-instance"
+            color="black"
+            version="full"
+            img={new URL("../assets/Glyph.svg", import.meta.url).href}
+            base={new URL("../assets/base.svg", import.meta.url).href}
+          />
+        </div>
+
+        {/* Right side - Cart and Wishlist Icons */}
+        <div className="icon-2 flex items-center gap-3">
           <div onClick={() => navigate('/panier')} className="cursor-pointer relative">
-            <ShopIncon className="shop-incon p-1" color={isOnPanierPage ? "#ef4444" : "#010101"} />
+            <ShopIncon className="shop-incon w-6 h-6" color={isOnPanierPage ? "#ef4444" : "#010101"} />
             {panierCount > 0 && (
               <span className={`absolute -top-1 -right-1 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ${isOnPanierPage ? 'bg-red-600' : 'bg-black'}`}>
                 {panierCount > 9 ? '9+' : panierCount}
@@ -247,7 +294,7 @@ export default function Navbar() {
           </div>
           <div onClick={() => navigate('/liste-souhait')} className="cursor-pointer relative">
             <WishListIcon 
-              className="wish-list-icon " 
+              className="wish-list-icon w-6 h-6" 
               color={isOnWishlistPage ? "#ef4444" : "#010101"}
               fill={isOnWishlistPage ? "#ef4444" : "none"}
             />
@@ -260,14 +307,27 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile search */}
-      <div className="md:hidden px-4 pb-3">
-        <SearchBar
-          className="search-bar-instance w-full"
-          placeholderPropertyDefaultClassName="design-component-instance-node"
-          icon={new URL("../assets/icon-3.svg", import.meta.url).href}
-        />
-      </div>
+      {/* Mobile search - only show when searchOpen is true */}
+      {searchOpen && (
+        <div className="md:hidden px-4 pb-3 border-t border-gray-200 mobile-search-container">
+          <div className="flex items-center justify-between">
+            <SearchBar
+              className="search-bar-instance flex-1"
+              placeholderPropertyDefaultClassName="design-component-instance-node-mobile"
+              icon={new URL("../assets/icon-3.svg", import.meta.url).href}
+            />
+            <button 
+              onClick={closeSearch}
+              className="ml-2 p-2 text-gray-500 hover:text-gray-700"
+              aria-label="Fermer la recherche"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Mobile/Tablet drawer */}
       <div
@@ -277,15 +337,9 @@ export default function Navbar() {
         <div className="flex flex-col h-full">
           {/* Drawer header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <FathnellLogo
-              className="fathnell-logo-2 scale-75"
-              baseClassName="fathnell-logo-3"
-              vectorClassName="fathnell-logo-instance"
-              color="black"
-              version="full"
-              img={new URL("../assets/Glyph.svg", import.meta.url).href}
-              base={new URL("../assets/base.svg", import.meta.url).href}
-            />
+            <h1 className="text-lg font-normal font-['Glacial_Indifference'] text-black">
+              FathNell Maroquinerie
+            </h1>
             <button
               onClick={closeDrawer}
               className="p-2 rounded-md hover:bg-gray-100 bg-white transition-colors"
@@ -299,7 +353,7 @@ export default function Navbar() {
 
           {/* Navigation links */}
           <div className="flex flex-col px-4 py-6 gap-2 flex-1 overflow-y-auto">
-            <div className="border-b border-gray-100">
+            <div className="">
               <MobileDropdown
                 label="SACS"
                 items={sacsDropdownItems}
@@ -308,7 +362,7 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="border-b border-gray-100">
+            <div className="">
               <MobileDropdown
                 label="CHAUSSURES"
                 items={chaussuresDropdownItems}
@@ -317,7 +371,7 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="border-b border-gray-100">
+            <div className="">
               <MobileDropdown
                 label="CEINTURES"
                 items={ceinturesDropdownItems}
@@ -326,7 +380,7 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="border-b border-gray-100">
+            <div className="">
               <MobileDropdown
                 label="PETITE MAROQUINERIE"
                 items={petiteMaroquinerieItems}
@@ -335,7 +389,7 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="border-b border-gray-100">
+            <div className="">
               <MobileDropdown
                 label="GADGETS"
                 items={gadjetsDropdownItems}
@@ -344,7 +398,7 @@ export default function Navbar() {
               />
             </div>
 
-            <div className="border-b border-gray-100 last:border-b-0">
+            <div className=" last:border-b-0">
               <MobileDropdown
                 label="PRODUITS D'ENTRETIENS"
                 items={produitsentretiensDropdownItems}
@@ -352,10 +406,40 @@ export default function Navbar() {
                 onItemClick={closeDrawer}
               />
             </div>
+
+            {/* Navigation links adicionales */}
+            {/* <div className="border-t border-gray-200 mt-4 pt-4">
+              <div className="space-y-2">
+                <button
+                  onClick={() => { navigate('/'); closeDrawer(); }}
+                  className="w-full text-left px-4 py-3 text-black font-['Glacial_Indifference'] hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  ACCUEIL
+                </button>
+                <button
+                  onClick={() => { navigate('/about'); closeDrawer(); }}
+                  className="w-full text-left px-4 py-3 text-black font-['Glacial_Indifference'] hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  À PROPOS
+                </button>
+                <button
+                  onClick={() => { navigate('/contact'); closeDrawer(); }}
+                  className="w-full text-left px-4 py-3 text-black font-['Glacial_Indifference'] hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  CONTACT
+                </button>
+                <button
+                  onClick={() => { navigate('/faq'); closeDrawer(); }}
+                  className="w-full text-left px-4 py-3 text-black font-['Glacial_Indifference'] hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  FAQ
+                </button>
+              </div>
+            </div> */}
           </div>
 
           {/* Drawer footer with icons */}
-          <div className="p-4 border-t border-gray-200">
+          {/* <div className="p-4 border-t border-gray-200">
             <div className="flex justify-center gap-6">
               <div onClick={() => { navigate('/panier'); closeDrawer(); }} className="cursor-pointer relative">
                 <ShopIncon className="shop-incon w-8 h-8" color={isOnPanierPage ? "#ef4444" : "#010101"} />
@@ -378,7 +462,7 @@ export default function Navbar() {
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

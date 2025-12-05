@@ -33,7 +33,7 @@ export default function Boutique() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center bg-white  ">
+    <div id="boutique" className="w-full flex flex-col items-center bg-white  ">
 <div className="w-full  px-16 py-1 mb-10 bg-zinc-400 inline-flex justify-start items-center ">
         <div className=" text-center text-black  font-bold font-['Glacial_Indifference'] leading-6">
           BOUTIQUE
@@ -74,7 +74,7 @@ export default function Boutique() {
                   : img10
                 }
                 alt={collection.nom}
-                className="w-80 h-72 object-cover rounded"
+                className="w-80 h-72 object-cover"
               />
 
               {/* ---- CONTENU ---- */}
@@ -89,10 +89,10 @@ export default function Boutique() {
 
                 {/* BOUTON DÉCOUVRIR */}
                 <div 
-                  className="self-stretch px-6 py-2 bg-white rounded-sm flex justify-center cursor-pointer hover:bg-gray-100 transition"
+                  className="self-stretch px-6 py-2 bg-gray-200 rounded-sm flex justify-center cursor-pointer hover:bg-gray-100 transition"
                   onClick={() => handleDecouvrir(collection.id)}
                 >
-                  <div className="text-center text-black text-base font-bold font-['Glacial_Indifference'] leading-6">
+                  <div className="text-center text-black  text-base font-bold font-['Glacial_Indifference'] leading-6">
                     Découvrir
                   </div>
                 </div>

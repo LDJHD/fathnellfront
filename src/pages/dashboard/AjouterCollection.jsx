@@ -168,11 +168,11 @@ export default function AjouterCollection() {
 
         {/* Image */}
         <div className="flex flex-col">
-          <label className="p-2 text-black text-lg">Image de couverture :</label>
+          <label className="p-2 text-black text-lg">Bannière de collection :</label>
 
           <label className="h-10 bg-neutral-200 rounded-sm flex items-center justify-between px-3 cursor-pointer">
             <span className="text-neutral-600 text-lg">
-              {image ? image.name : "Téléversez un média"}
+              {image ? image.name : "Téléversez une bannière"}
             </span>
 
             {/* Icône upload */}
@@ -189,6 +189,9 @@ export default function AjouterCollection() {
               onChange={(e) => setImage(e.target.files[0])}
             />
           </label>
+          <p className="text-sm text-gray-600 mt-1">
+            Image qui s'affichera en haut de la page collection (JPG, PNG, GIF, WEBP - max 5MB)
+          </p>
         </div>
 
         {/* BOUTON */}
