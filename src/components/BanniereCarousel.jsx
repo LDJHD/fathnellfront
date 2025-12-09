@@ -58,7 +58,7 @@ export default function BanniereCarousel() {
     // Afficher l'image hero par défaut si pas de bannières
     if (loading) {
         return (
-            <div className="w-full h-[200px] md:h-[800px] bg-gray-200 animate-pulse">
+            <div className="w-full h-[400px] md:h-[1000px] bg-gray-200 animate-pulse">
                 {/* Skeleton loader */}
             </div>
         );
@@ -68,7 +68,7 @@ export default function BanniereCarousel() {
         // Afficher l'image hero par défaut
         return (
             <div
-                className="w-full h-[200px] md:h-[800px] relative overflow-hidden bg-cover bg-center"
+                className="w-full h-[400px] md:h-[1000px] relative overflow-hidden bg-cover bg-center"
                 style={{ backgroundImage: `url(${heroImage})` }}
             >
                 <div
@@ -95,7 +95,7 @@ export default function BanniereCarousel() {
     if (bannieres.length === 1) {
         return (
             <div
-                className="w-full h-[200px] md:h-[800px] relative overflow-hidden bg-cover bg-center"
+                className="w-full h-[400px] md:h-[1000px] relative overflow-hidden bg-cover bg-center"
                 style={{ backgroundImage: `url(${API_BASE_URL}${bannieres[0].image_url})` }}
             >
                 <div
@@ -120,7 +120,7 @@ export default function BanniereCarousel() {
 
     // Carousel avec plusieurs bannières
     return (
-        <div className="w-full h-[200px] md:h-[800px] relative overflow-hidden">
+        <div className="w-full h-[400px] md:h-[1000px] relative overflow-hidden">
             {/* Images du carousel */}
             <div 
                 className="flex transition-transform duration-500 ease-in-out h-full"

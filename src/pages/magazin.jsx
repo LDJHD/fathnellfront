@@ -160,7 +160,7 @@ export default function Magazin() {
 
             {/* ---------- BANNIÈRE ---------- */}
             <div
-                className="w-full h-[200px] md:h-[700px] bg-cover bg-center"
+                className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
                 style={{ 
                     backgroundImage: `url(${
                         collection?.image 
