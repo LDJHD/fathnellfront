@@ -6,6 +6,7 @@ import { Trash2 } from "lucide-react";
 import { useWishlist } from "../hooks/useWishlist";
 import { usePanier } from "../hooks/usePanier";
 import { panierAPI } from "../services/api";
+import { getProductImageUrl } from "../utils/imageUtils";
 
 export default function ListeSouhait() {
   const navigate = useNavigate();
@@ -109,9 +110,7 @@ export default function ListeSouhait() {
           wishlistItems.map((item) => {
             const isAvailable = item.stock_status !== "indisponible";
             const prix = getPrix(item);
-            const imageUrl = item.image_principale 
-              ? `${import.meta.env.VITE_API_URL}/uploads/produits/${item.image_principale}` 
-              : img12;
+            const imageUrl = getProductImageUrl(item.image_principale, img12);
 
             return (
               <div

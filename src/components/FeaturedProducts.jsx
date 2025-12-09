@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import img1 from "../assets/c4a7047241bae2a48d4c9418731c13ef0f172c91.jpg";
 import { ProductCard } from "./ProductCard";
 import { produitsAPI } from "../services/api";
+import { getProductImageUrl } from "../utils/imageUtils";
 
 export const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -20,9 +21,7 @@ export const FeaturedProducts = () => {
         // Transformer les données pour qu'elles correspondent au format attendu par ProductCard
         const transformedProducts = produits.map(produit => ({
           id: produit.id,
-          image: produit.image_principale 
-            ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.image_principale}`
-            : img1,
+          image: getProductImageUrl(produit.image_principale, img1),
           title: produit.nom,
           price: produit.prix,
           promo: produit.en_promo ? produit.prix_promo : null

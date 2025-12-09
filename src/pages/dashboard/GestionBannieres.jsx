@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Eye, EyeOff, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
 import logo from "../../assets/logo.png";
+import { getBanniereImageUrl } from "../../utils/imageUtils";
 
 export default function GestionBannieres() {
     const [bannieres, setBannieres] = useState([]);
@@ -296,7 +297,7 @@ export default function GestionBannieres() {
                                     <tr key={banniere.id}>
                                         <td className="px-6 py-4">
                                             <img
-                                                src={`${API_BASE_URL}${banniere.image_url}`}
+                                                src={getBanniereImageUrl(banniere.image_url, "https://placehold.co/400x200")}
                                                 alt={banniere.titre || 'Bannière'}
                                                 className="w-24 h-16 object-cover rounded-lg"
                                             />

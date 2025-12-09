@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { produitsAPI, collectionsAPI } from "../../services/api";
 import logo from "../../assets/logo.png";
+import { getProductImageUrl } from "../../utils/imageUtils";
 
 export default function CatalogueResponsive() {
   const navigate = useNavigate();
@@ -306,10 +307,7 @@ export default function CatalogueResponsive() {
               {/* IMAGE */}
               <img
                 className="w-14 h-14 rounded mx-auto sm:mx-0 object-cover"
-                src={produit.image_principale
-                  ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.image_principale}`
-                  : "https://placehold.co/50x50"
-                }
+                src={getProductImageUrl(produit.image_principale, "https://placehold.co/50x50")}
                 alt={produit.nom}
                 onError={(e) => {
                   e.target.src = "https://placehold.co/50x50";

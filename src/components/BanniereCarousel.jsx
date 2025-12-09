@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import heroImage from "../assets/hero-image.jpg";
+import { getBanniereImageUrl } from "../utils/imageUtils";
 
 export default function BanniereCarousel() {
     const [bannieres, setBannieres] = useState([]);
@@ -96,7 +97,7 @@ export default function BanniereCarousel() {
         return (
             <div
                 className="w-full h-[400px] md:h-[1000px] relative overflow-hidden bg-cover bg-center"
-                style={{ backgroundImage: `url(${API_BASE_URL}${bannieres[0].image_url})` }}
+                style={{ backgroundImage: `url(${getBanniereImageUrl(bannieres[0].image_url, heroImage)})` }}
             >
                 <div
                     className="
@@ -130,7 +131,7 @@ export default function BanniereCarousel() {
                     <div
                         key={banniere.id}
                         className="w-full h-full flex-shrink-0 bg-cover bg-center relative"
-                        style={{ backgroundImage: `url(${API_BASE_URL}${banniere.image_url})` }}
+                        style={{ backgroundImage: `url(${getBanniereImageUrl(banniere.image_url, heroImage)})` }}
                     >
                         {/* Bouton "Aller en boutique" */}
                         <div

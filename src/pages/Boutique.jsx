@@ -1,6 +1,7 @@
 import img10 from "../assets/img10.png";
 import { collectionsAPI } from "../services/api";
 import { useState, useEffect } from "react";
+import { getCollectionImageUrl } from "../utils/imageUtils";
 
 export default function Boutique() {
   const [collections, setCollections] = useState([]);
@@ -69,10 +70,7 @@ export default function Boutique() {
             >
               {/* ---- IMAGE ---- */}
               <img
-                src={collection.image 
-                  ? `${import.meta.env.VITE_API_URL}/uploads/collections/${collection.image}` 
-                  : img10
-                }
+                src={getCollectionImageUrl(collection.image, img10)}
                 alt={collection.nom}
                 className="w-80 h-72 object-cover"
               />

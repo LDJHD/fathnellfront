@@ -2,6 +2,7 @@
 import { collectionsAPI } from "../../services/api";
 import { useParams } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { getCollectionImageUrl } from "../../utils/imageUtils";
 
 /* ----------------------- MODAL SUCCÈS ----------------------- */
 function SuccessModal({ onClose }) {
@@ -222,7 +223,7 @@ export default function ModifierCollection() {
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">Image actuelle :</p>
               <img 
-                src={`${import.meta.env.VITE_API_URL}/uploads/collections/${currentImage}`}
+                src={getCollectionImageUrl(currentImage, "https://placehold.co/300x200")}
                 alt="Image actuelle"
                 className="w-32 h-24 object-cover rounded border"
               />

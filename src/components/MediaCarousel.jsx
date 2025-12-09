@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { getProductImageUrl } from "../utils/imageUtils";
 
 const MediaCarousel = ({ medias = [], productName = "Produit" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,7 +53,7 @@ const MediaCarousel = ({ medias = [], productName = "Produit" }) => {
     if (media.media_url?.startsWith('http') || media.media_url?.startsWith('/')) {
       return media.media_url;
     }
-    return `${import.meta.env.VITE_API_URL}/uploads/produits/${media.media_url}`;
+    return getProductImageUrl(media.media_url, null);
   };
 
   return (
@@ -147,7 +148,7 @@ const MediaCarousel = ({ medias = [], productName = "Produit" }) => {
       {medias.length > 1 && (
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
           {medias.map((media, index) => (
-            <button
+            <span
               key={index}
               onClick={() => goToMedia(index)}
               className={`flex-shrink-0 w-16 h-16 rounded border-2 overflow-hidden transition ${
@@ -182,7 +183,7 @@ const MediaCarousel = ({ medias = [], productName = "Produit" }) => {
                   />
                 )}
               </div>
-            </button>
+            </span>
           ))}
         </div>
       )}

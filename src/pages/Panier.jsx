@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import img12 from "../assets/img12.png";
 import { Trash2 } from "lucide-react";
 import { panierAPI, commandesAPI } from "../services/api";
 import { CONFIG, generateWhatsAppURL } from "../config/config";
 import { usePanier } from "../hooks/usePanier";
+import { getProductImageUrl } from "../utils/imageUtils";
 
 export default function Panier() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function Panier() {
       const response = await panierAPI.modifierQuantite(itemId, newQuantity);
       if (response.ok) {
         fetchPanier(); // Recharger le panier local
-        loadPanier(); // Recharger le contexte pour mettre à jour la Navbar
+        loadPanier(); // Recharger le contexte pour mettre Ã  jour la Navbar
       }
     } catch (error) {
       console.error("Erreur lors de la modification de la quantité:", error);
@@ -58,7 +59,7 @@ export default function Panier() {
       const response = await panierAPI.supprimerItem(itemId);
       if (response.ok) {
         fetchPanier(); // Recharger le panier local
-        loadPanier(); // Recharger le contexte pour mettre à jour la Navbar
+        loadPanier(); // Recharger le contexte pour mettre Ã  jour la Navbar
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
@@ -71,20 +72,20 @@ export default function Panier() {
       const response = await commandesAPI.creer();
       if (response.ok) {
         const data = await response.json();
-        console.log("📦 Données de la commande reçues:", data);
-        console.log("📦 Articles dans la commande:", data.commande?.articles);
+        console.log("ðŸ“¦ Données de la commande reÃ§ues:", data);
+        console.log("ðŸ“¦ Articles dans la commande:", data.commande?.articles);
         
-        alert(`Commande créée avec succès ! Numéro: ${data.commande.numero_commande}`);
+        alert(`Commande créée avec succÃ¨s ! Numéro: ${data.commande.numero_commande}`);
         
         // Récupérer les articles de la commande
         const articles = data.commande?.articles || [];
-        console.log("📦 Articles extraits:", articles);
-        console.log("📦 Nombre d'articles:", articles.length);
+        console.log("ðŸ“¦ Articles extraits:", articles);
+        console.log("ðŸ“¦ Nombre d'articles:", articles.length);
         
         // Si pas d'articles dans la réponse, utiliser les articles du panier actuel
         let articlesPourMessage = articles;
         if (articles.length === 0) {
-          console.log("⚠️ Aucun article dans la réponse, utilisation du panier actuel");
+          console.log("âš ï¸ Aucun article dans la réponse, utilisation du panier actuel");
           const nonCustom = panier.articles_non_personnalises || [];
           const custom = panier.articles_personnalises || [];
           
@@ -116,7 +117,7 @@ export default function Panier() {
           ];
         }
         
-        console.log("📦 Articles pour le message:", articlesPourMessage);
+        console.log("ðŸ“¦ Articles pour le message:", articlesPourMessage);
         
         // Vérifier s'il y a des articles personnalisés
         const hasCustomItems = articlesPourMessage.some(article => article.personnalise) || (panier.articles_personnalises && panier.articles_personnalises.length > 0);
@@ -126,7 +127,7 @@ export default function Panier() {
           ? CONFIG.WHATSAPP.MESSAGES.CUSTOM_ORDER(data.commande.numero_commande, articlesPourMessage)
           : CONFIG.WHATSAPP.MESSAGES.ORDER(data.commande.numero_commande, data.commande.montant_total.toLocaleString(), articlesPourMessage);
         
-        console.log("📱 Message WhatsApp généré:", message);
+        console.log("ðŸ“± Message WhatsApp généré:", message);
         
         // Générer l'URL WhatsApp
         const whatsappUrl = generateWhatsAppURL(message);
@@ -139,11 +140,11 @@ export default function Panier() {
           // Utiliser window.location.href pour éviter les bloqueurs de popup
           window.location.href = whatsappUrl;
         } else {
-          alert("⚠️ Configuration WhatsApp manquante. Contactez l'administrateur.");
+          alert("âš ï¸ Configuration WhatsApp manquante. Contactez l'administrateur.");
         }
         
         fetchPanier(); // Recharger (panier sera vide)
-        loadPanier(); // Recharger le contexte pour mettre à jour la Navbar
+        loadPanier(); // Recharger le contexte pour mettre Ã  jour la Navbar
       } else {
         const errorData = await response.json();
         alert(`Erreur: ${errorData.message}`);
@@ -202,12 +203,12 @@ export default function Panier() {
       {/* HEADER */}
       
 
-      {/* TITRE ARTICLES NON PERSONNALISÉS */}
+      {/* TITRE ARTICLES NON PERSONNALISÃ‰S */}
       <div className="self-start p-2 px-10 mt-6">
         <h2 className="text-black text-2xl md:text-3xl underline leading-8 md:leading-10">Articles non personnalisés :</h2>
       </div>
 
-      {/* LISTE DES ARTICLES NON PERSONNALISÉS */}
+      {/* LISTE DES ARTICLES NON PERSONNALISÃ‰S */}
       <div className="w-full overflow-x-auto mt-4">
         <div className="flex flex-col gap-3 px-10">
           {nonCustom.length === 0 ? (
@@ -221,7 +222,7 @@ export default function Panier() {
                 className="flex min-w-[600px] w-full p-2 bg-white border-b border-neutral-700 flex-row justify-between items-center gap-2"
               >
                 <img 
-                  src={item.image_principale ? `${import.meta.env.VITE_API_URL}/uploads/produits/${item.image_principale}` : img12} 
+                  src={getProductImageUrl(item.image_principale, img12)} 
                   className="w-24 md:w-36 h-24 md:h-24 rounded-sm object-cover flex-shrink-0" 
                 />
 
@@ -281,12 +282,12 @@ export default function Panier() {
         </div>
       </div>
 
-      {/* TITRE ARTICLES PERSONNALISÉS */}
+      {/* TITRE ARTICLES PERSONNALISÃ‰S */}
       <div className="self-start p-2 px-10 mt-10">
         <h2 className="text-black text-2xl md:text-3xl underline leading-8 md:leading-10">Articles personnalisés :</h2>
       </div>
 
-      {/* LISTE DES ARTICLES PERSONNALISÉS */}
+      {/* LISTE DES ARTICLES PERSONNALISÃ‰S */}
       <div className="w-full overflow-x-auto mt-4">
         <div className="flex flex-col px-10 gap-3">
           {custom.length === 0 ? (
@@ -300,14 +301,14 @@ export default function Panier() {
                 className="flex min-w-[600px] w-full p-2 bg-white border-b border-neutral-700 flex-row justify-between items-center gap-2"
               >
                 <img 
-                  src={item.image_principale ? `${import.meta.env.VITE_API_URL}/uploads/produits/${item.image_principale}` : img12} 
+                  src={getProductImageUrl(item.image_principale, img12)} 
                   className="w-24 md:w-36 h-24 md:h-24 rounded-sm object-cover flex-shrink-0" 
                 />
 
                 <div className="flex flex-col justify-center flex-1 min-w-[100px] text-center md:text-left">
                   <p className="text-primary-base text-lg leading-6 md:leading-8">{item.produit_nom}</p>
                   <p className="text-primary-base text-lg leading-6 md:leading-8">{item.prix_unitaire.toLocaleString()} xof</p>
-                  <p className="text-primary-base text-lg leading-6 md:leading-8">Prix de personnalisation à définir</p>
+                  <p className="text-primary-base text-lg leading-6 md:leading-8">Prix de personnalisation Ã  définir</p>
                   {item.stock_status && (
                     <p className={`text-sm font-semibold ${getStockStatusColor(item.stock_status)}`}>
                       {getStockStatusText(item.stock_status)}
@@ -386,3 +387,4 @@ export default function Panier() {
     </div>
   );
 }
+

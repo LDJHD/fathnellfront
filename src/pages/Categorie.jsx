@@ -5,6 +5,7 @@ import heroImage from "../assets/hero-image.jpg";
 import img12 from "../assets/img12.png";
 import { produitsAPI, categoriesAPI } from "../services/api";
 import { useWishlist } from "../hooks/useWishlist";
+import { getProductImageUrl, getCategoryImageUrl } from "../utils/imageUtils";
 
 export default function Categorie() {
     const { categoryName } = useParams(); // Récupère la catégorie depuis l'URL
@@ -196,9 +197,7 @@ export default function Categorie() {
                         categoryName && categories.length > 0 
                             ? (() => {
                                 const dbCategory = findCategoryByUrlName(categoryName);
-                                return dbCategory?.banniere_url 
-                                    ? `${API_BASE_URL}${dbCategory.banniere_url}`
-                                    : heroImage;
+                                return getCategoryImageUrl(dbCategory?.banniere_url, heroImage);
                             })()
                             : heroImage
                     })` 
@@ -333,10 +332,7 @@ export default function Categorie() {
                                     </button>
 
                                     <img
-                                        src={produit.image_principale 
-                                            ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.image_principale}` 
-                                            : img12
-                                        }
+                                        src={getProductImageUrl(produit.image_principale, img12)}
                                         alt={produit.nom}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-95 group-hover:brightness-90"
                                     />

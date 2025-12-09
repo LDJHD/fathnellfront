@@ -5,6 +5,7 @@ import heroImage from "../assets/hero-image.jpg";
 import img12 from "../assets/img12.png";
 import { produitsAPI, collectionsAPI } from "../services/api";
 import { useWishlist } from "../hooks/useWishlist";
+import { getProductImageUrl, getBanniereImageUrl, getCollectionImageUrl } from "../utils/imageUtils";
 
 export default function Magazin() {
     const { collectionId } = useParams(); // Récupère l'ID de la collection depuis l'URL
@@ -162,11 +163,7 @@ export default function Magazin() {
             <div
                 className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
                 style={{ 
-                    backgroundImage: `url(${
-                        collection?.image 
-                            ? `${import.meta.env.VITE_API_URL}/uploads/collections/${collection.image}`
-                            : heroImage
-                    })` 
+                    backgroundImage: `url(${getCollectionImageUrl(collection?.image, heroImage)})` 
                 }}
             />
             {/* ---------- nom collection ---------- */}
@@ -298,10 +295,7 @@ export default function Magazin() {
                                     </button>
 
                                     <img
-                                        src={produit.image_principale 
-                                            ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.image_principale}` 
-                                            : img12
-                                        }
+                                        src={getProductImageUrl(produit.image_principale, img12)}
                                         alt={produit.nom}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-95 group-hover:brightness-90"
                                     />
