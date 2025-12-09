@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { collectionsAPI, couleursAPI, taillesAPI, produitsAPI, categoriesAPI } from "../../services/api";
-const imgA = encodeURI("/mnt/data/Capture d’écran (166).png");
-const imgB = encodeURI("/mnt/data/Capture d’écran (168).png");
-
+import MediaPreview from "../../components/MediaPreview";
+const imgA = encodeURI("/mnt/data/Capture d'écran (166).png");
+const imgB = encodeURI("/mnt/data/Capture d'écran (168).png");
+import logo from "../../assets/logo.png";
 /* ----------------------- MODAL SUCCÈS ----------------------- */
 function SuccessModal({ onClose }) {
     return (
@@ -188,7 +189,29 @@ export default function AjouterArticle({ editMode = false }) {
 
     const onFilesChange = (e) => {
         const files = Array.from(e.target.files);
-        setMediaFiles(files);
+        
+        // Valider les types de fichiers
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'video/mp4', 'video/webm', 'video/mov', 'video/avi'];
+        const validFiles = files.filter(file => {
+            if (allowedTypes.includes(file.type)) {
+                return true;
+            }
+            // Fallback basé sur l'extension pour certains navigateurs
+            const extension = file.name.toLowerCase().split('.').pop();
+            const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'webm', 'mov', 'avi'];
+            return allowedExtensions.includes(extension);
+        });
+
+        if (validFiles.length !== files.length) {
+            setErrorMessage("Certains fichiers ont été ignorés. Seules les images (JPG, PNG, GIF) et vidéos (MP4, WebM, MOV, AVI) sont autorisées.");
+            setShowError(true);
+        }
+
+        setMediaFiles(validFiles);
+    };
+
+    const removeMediaFile = (index) => {
+        setMediaFiles(prev => prev.filter((_, i) => i !== index));
     };
 
     // Validation
@@ -243,9 +266,9 @@ export default function AjouterArticle({ editMode = false }) {
             formData.append('couleurs', JSON.stringify(selectedCouleurs));
             formData.append('tailles', JSON.stringify(selectedTailles));
             
-            // Ajouter les images
+            // Ajouter les médias (images et vidéos)
             mediaFiles.forEach((file, index) => {
-                formData.append('images', file);
+                formData.append('medias', file);
             });
 
             let response;
@@ -307,7 +330,7 @@ export default function AjouterArticle({ editMode = false }) {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-white rounded-full border flex items-center justify-center">
-                        <img src={imgA} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
+                        <img src={logo} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
                     </div>
                     <div className="text-right">
                         <div className="text-sm font-bold">Fathnelle DJIHOUESSI</div>
@@ -627,31 +650,37 @@ export default function AjouterArticle({ editMode = false }) {
                     {openMedias && (
                         <div className="mt-4 bg-white p-6 rounded-md border">
                             <div className="max-w-3xl mx-auto space-y-6">
-                                {/* Galerie */}
+                                {/* Galerie de médias */}
                                 <div className="flex flex-col gap-2">
-                                    <div className="text-lg">Galerie d'images :</div>
-                                    <div className="flex gap-3 flex-wrap items-center">
-                                        <label className="w-28 h-28 bg-neutral-200 rounded flex items-center justify-center text-neutral-600 cursor-pointer border-2 border-dashed">
+                                    <div className="text-lg">Galerie de médias (photos et vidéos) :</div>
+                                    <div className="flex gap-3 flex-wrap items-start">
+                                        <label className="w-32 h-32 bg-neutral-200 rounded flex flex-col items-center justify-center text-neutral-600 cursor-pointer border-2 border-dashed hover:bg-neutral-300 transition">
                                             <input 
                                                 type="file" 
                                                 multiple 
-                                                accept="image/*"
+                                                accept="image/*,video/*"
                                                 className="hidden" 
                                                 onChange={onFilesChange} 
                                             />
-                                            + Ajouter
-                                        </label>
-
-                                        {mediaFiles.length > 0 && (
-                                            <div className="flex gap-2 items-center flex-wrap">
-                                                {mediaFiles.map((file, idx) => (
-                                                    <div key={idx} className="text-sm bg-gray-200 px-3 py-1 rounded">
-                                                        {file.name}
-                                                    </div>
-                                                ))}
+                                            <div className="text-2xl mb-1">📷🎬</div>
+                                            <div className="text-sm text-center px-2">
+                                                Ajouter photos/vidéos
                                             </div>
-                                        )}
+                                        </label>
                                     </div>
+                                    
+                                    {/* Composant de prévisualisation */}
+                                    <MediaPreview 
+                                        files={mediaFiles} 
+                                        onRemove={removeMediaFile}
+                                    />
+                                    
+                                    {mediaFiles.length > 0 && (
+                                        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
+                                            <strong>📝 Note :</strong> Le premier média sera utilisé comme image principale du produit. 
+                                            Vous pouvez réorganiser l'ordre en supprimant et en rajoutant les fichiers dans l'ordre souhaité.
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* État du stock */}
@@ -662,6 +691,7 @@ export default function AjouterArticle({ editMode = false }) {
                                         onChange={(e) => setStockStatus(e.target.value)}
                                         className="w-full bg-neutral-200 rounded px-3 py-2 max-w-xs"
                                     >
+                                        <option value="sur_commande">Sur commande</option>
                                         <option value="disponible">Disponible</option>
                                         <option value="stock_limite">Stock limité</option>
                                         <option value="indisponible">Indisponible</option>

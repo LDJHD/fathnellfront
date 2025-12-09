@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import img1 from "../assets/65f8ff8a1014094833e98a7cf52ab37016b10f78.jpg";
-import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { produitsAPI, panierAPI } from "../services/api";
 import { useParams } from "react-router-dom";
 import { WhatsAppProductLink } from "../components/WhatsAppButton";
 import { useWishlist } from "../hooks/useWishlist";
 import { usePanier } from "../hooks/usePanier";
+import MediaCarousel from "../components/MediaCarousel";
 
 export default function FicheProduit() {
   const { id } = useParams();
   const [produit, setProduit] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imageIndex, setImageIndex] = useState(0);
+  const [mediaIndex, setMediaIndex] = useState(0);
   const [selectedCouleur, setSelectedCouleur] = useState(null);
   const [selectedTaille, setSelectedTaille] = useState(null);
   const [personaliser, setPersonnaliser] = useState(false);
@@ -64,7 +65,7 @@ export default function FicheProduit() {
       if (response.ok) {
         loadPanier(); // Recharger le contexte pour mettre à jour la Navbar
         alert("Produit ajouté au panier avec succès !");
-        
+
         // Réinitialiser les sélections
         setSelectedCouleur(null);
         setSelectedTaille(null);
@@ -88,17 +89,18 @@ export default function FicheProduit() {
     }
   }, [id]);
 
-  const next = () => {
-    if (produit?.images?.length > 0) {
-      setImageIndex((prev) => (prev + 1) % produit.images.length);
-    }
-  };
+  // Ces fonctions ne sont plus nécessaires car gérées par MediaCarousel
+  // const next = () => {
+  //   if (produit?.medias?.length > 0) {
+  //     setMediaIndex((prev) => (prev + 1) % produit.medias.length);
+  //   }
+  // };
 
-  const prev = () => {
-    if (produit?.images?.length > 0) {
-      setImageIndex((prev) => (prev - 1 + produit.images.length) % produit.images.length);
-    }
-  };
+  // const prev = () => {
+  //   if (produit?.medias?.length > 0) {
+  //     setMediaIndex((prev) => (prev - 1 + produit.medias.length) % produit.medias.length);
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -120,71 +122,60 @@ export default function FicheProduit() {
     );
   }
 
-  const images = produit.images?.length > 0 
-    ? produit.images.map(img => `${import.meta.env.VITE_API_URL}/uploads/produits/${img.image_url}`)
-    : [img1];
+  // Préparer les médias pour le carousel
+  const medias = produit.medias?.length > 0 ? produit.medias : [];
+  
+  // Image de fallback si aucun média
+  const fallbackMedia = {
+    type_media: 'image',
+    media_url: img1,
+    is_principal: true,
+    ordre: 1
+  };
+  
+  const mediasToDisplay = medias.length > 0 ? medias : [fallbackMedia];
 
   const prix = produit.en_promo ? produit.prix_promo : produit.prix;
 
   return (
     <div className="w-full bg-white font-[Glacial_Indifference] text-black flex flex-col items-center">
       {/* HEADER */}
-      <div className="w-full h-8 px-4 md:px-16 py-1 border-b-[5px] border-zinc-400 flex items-center bg-white">
-        <p className="text-black text-base font-bold leading-6">
-          Boutique › {produit.categorie?.nom} › {produit.nom}
+      <div className="w-full min-h-8 px-4 md:px-16 py-1 border-b-[5px] border-zinc-400 flex items-center bg-white">
+        <p className="text-black text-sm md:text-base font-bold leading-6 break-words overflow-hidden">
+          <span className="block sm:inline">Boutique › {produit.categorie?.nom}</span>
+          <span className="block sm:inline sm:before:content-['_›_']">{produit.nom}</span>
         </p>
       </div>
 
       {/* CONTENU PRINCIPAL */}
       <div className="w-full max-w-[1440px] px-4 md:px-16 mt-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {/* SLIDER */}
-        <div className="relative w-full h-[350px] md:h-[450px] lg:h-[500px] rounded-sm overflow-hidden">
+        {/* CAROUSEL MULTIMÉDIA */}
+        <div className="relative">
           {/* Icône cœur wishlist */}
           <button
             onClick={async () => await toggleWishlist(produit.id)}
-            className="absolute top-4 right-4 bg-white p-3 border border-black rounded-sm hover:scale-110 transition z-10"
+            className="absolute top-4 right-4 bg-white p-3 border border-black rounded-sm hover:scale-110 transition z-20"
             aria-label={isInWishlist(produit.id) ? "Retirer de la liste de souhaits" : "Ajouter à la liste de souhaits"}
           >
-            <Heart 
-              size={24} 
+            <Heart
+              size={24}
               fill={isInWishlist(produit.id) ? "#ef4444" : "none"}
               stroke={isInWishlist(produit.id) ? "#ef4444" : "black"}
               strokeWidth={1.5}
             />
           </button>
-          
-          <img 
-            src={images[imageIndex]} 
-            className="w-full h-full object-cover duration-300" 
-            alt={produit.nom}
+
+          <MediaCarousel 
+            medias={mediasToDisplay} 
+            productName={produit.nom}
           />
-
-          {images.length > 1 && (
-            <>
-              {/* Bouton gauche */}
-              <button
-                onClick={prev}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"
-              >
-                <ChevronLeft className="w-6 h-6 text-black" />
-              </button>
-
-              {/* Bouton droite */}
-              <button
-                onClick={next}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"
-              >
-                <ChevronRight className="w-6 h-6 text-black" />
-              </button>
-            </>
-          )}
         </div>
 
         {/* DESCRIPTION */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-normal leading-10">{produit.nom}</h1>
-            {produit.personnalisable && (
+            {produit.personnalisable === 1 && (
               <span className="text-base leading-6">( Personnalisable )</span>
             )}
           </div>
@@ -218,9 +209,8 @@ export default function FicheProduit() {
                 {produit.couleurs.map((couleur) => (
                   <div
                     key={couleur.id}
-                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${
-                      selectedCouleur === couleur.id ? 'border-black border-4' : 'border-gray-300'
-                    }`}
+                    className={`w-8 h-8 rounded-full border-2 cursor-pointer ${selectedCouleur === couleur.id ? 'border-black border-4' : 'border-gray-300'
+                      }`}
                     style={{ backgroundColor: couleur.code_hex }}
                     onClick={() => setSelectedCouleur(selectedCouleur === couleur.id ? null : couleur.id)}
                     title={couleur.nom}
@@ -235,17 +225,16 @@ export default function FicheProduit() {
             <div className="mt-4">
               <p className="text-base leading-6 mb-2">
                 {produit.tailles[0]?.type === 'pointure' ? 'Pointures' :
-                 produit.tailles[0]?.type === 'dimension' ? 'Tailles (cm)' : 'Tailles'} :
+                  produit.tailles[0]?.type === 'dimension' ? 'Tailles (cm)' : 'Tailles'} :
               </p>
               <div className="flex gap-3 flex-wrap">
                 {produit.tailles.map((taille) => (
                   <button
                     key={taille.id}
-                    className={`px-4 py-2 border rounded-full text-base ${
-                      selectedTaille === taille.id 
-                        ? 'bg-black text-white border-black' 
+                    className={`px-4 py-2 border rounded-full text-base ${selectedTaille === taille.id
+                        ? 'bg-black text-white border-black'
                         : 'bg-white border-black text-black'
-                    }`}
+                      }`}
                     onClick={() => setSelectedTaille(selectedTaille === taille.id ? null : taille.id)}
                   >
                     {taille.nom}
@@ -256,11 +245,11 @@ export default function FicheProduit() {
           )}
 
           {/* CHECKBOX PERSONNALISATION */}
-          {produit.personnalisable && (
+          {produit.personnalisable===1 && (
             <div className="mt-4">
               <label className="flex items-center gap-3 cursor-pointer">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   className="w-5 h-5 border bg-white border-black"
                   checked={personaliser}
                   onChange={(e) => setPersonnaliser(e.target.checked)}
@@ -269,7 +258,7 @@ export default function FicheProduit() {
                   Je veux personnaliser avant d'ajouter au panier
                 </span>
               </label>
-              
+
               {/* CHAMP DE PERSONNALISATION */}
               {personaliser && (
                 <div className="mt-3">
@@ -280,13 +269,13 @@ export default function FicheProduit() {
                     id="textePersonnalisation"
                     value={textePersonnalisation}
                     onChange={(e) => setTextePersonnalisation(e.target.value)}
-                    placeholder="Saisissez le texte que vous souhaitez faire graver ou broder..."
+                    placeholder="Saisissez l'initial ou le nom que vous souhaitez faire graver"
                     className="w-full p-3 border border-black rounded-sm resize-none focus:outline-none focus:ring-2 bg-white focus:ring-black focus:border-transparent"
                     rows={3}
-                    maxLength={200}
+                    maxLength={50}
                   />
                   <div className="text-sm text-gray-500 mt-1">
-                    {textePersonnalisation.length}/200 caractères
+                    {textePersonnalisation.length}/50 caractères
                   </div>
                 </div>
               )}
@@ -298,16 +287,15 @@ export default function FicheProduit() {
             <button
               onClick={handleAjouterAuPanier}
               disabled={ajoutEnCours}
-              className={`px-6 py-2 text-base font-bold rounded-sm w-fit ${
-                ajoutEnCours
+              className={`px-6 py-2 text-base font-bold rounded-sm w-fit ${ajoutEnCours
                   ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                   : 'bg-black text-white hover:bg-gray-800'
-              }`}
+                }`}
             >
               {ajoutEnCours ? "AJOUT EN COURS..." : "AJOUTER AU PANIER"}
             </button>
 
-            <WhatsAppProductLink 
+            <WhatsAppProductLink
               productName={produit.nom}
               className="px-6 py-2 text-base font-bold rounded-sm border-2 border-green-500 text-green-600 hover:bg-green-500 hover:text-white transition-colors w-fit"
             >

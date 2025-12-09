@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import thumbnail from "../../assets/img01.png";
 import { commandesAPI } from "../../services/api";
+import logo from "../../assets/logo.png";
 
 export default function GestionCommandes() {
   const [commandes, setCommandes] = useState([]);
@@ -48,7 +49,7 @@ export default function GestionCommandes() {
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center outline outline-1 outline-offset-[-1px]">
             <img
-              src={thumbnail}
+              src={logo}
               alt="avatar"
               className="w-8 h-8 object-cover rounded-full"
             />

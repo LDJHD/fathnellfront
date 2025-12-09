@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { collectionsAPI } from "../../services/api";
+import logo from "../../assets/logo.png";
 
 /* ----------------------- MODAL SUCCÈS ----------------------- */
 function SuccessModal({ onClose }) {
@@ -122,7 +123,7 @@ export default function AjouterCollection() {
 
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white rounded-full border flex items-center justify-center">
-              <img className="w-8 h-8 rounded-full" src="https://placehold.co/32x32" />
+              <img className="w-8 h-8 rounded-full" src={logo} />
             </div>
 
             <div className="text-right leading-5">

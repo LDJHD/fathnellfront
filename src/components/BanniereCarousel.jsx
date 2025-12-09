@@ -7,13 +7,13 @@ export default function BanniereCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
 
     // Charger les bannières actives
     useEffect(() => {
         const chargerBannieres = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/banniere/actives`);
+                const response = await fetch(`${API_BASE_URL}/api/v1/banniere/actives`);
                 const data = await response.json();
                 
                 if (data.success && data.bannieres.length > 0) {
@@ -58,7 +58,7 @@ export default function BanniereCarousel() {
     // Afficher l'image hero par défaut si pas de bannières
     if (loading) {
         return (
-            <div className="w-full h-[200px] md:h-[700px] bg-gray-200 animate-pulse">
+            <div className="w-full h-[200px] md:h-[800px] bg-gray-200 animate-pulse">
                 {/* Skeleton loader */}
             </div>
         );
@@ -68,12 +68,12 @@ export default function BanniereCarousel() {
         // Afficher l'image hero par défaut
         return (
             <div
-                className="w-full h-[200px] md:h-[700px] relative overflow-hidden bg-cover bg-center"
+                className="w-full h-[200px] md:h-[800px] relative overflow-hidden bg-cover bg-center"
                 style={{ backgroundImage: `url(${heroImage})` }}
             >
                 <div
                     className="
-                        absolute bottom-2 right-1  /* Mobile : centré en bas */
+                        absolute bottom-[-15px] right-1  /* Mobile : centré en bas */
                         md:left-auto md:translate-x-0 md:right-10  /* Desktop : aligné à droite */
                         md:bottom-2                   /* En bas du conteneur */
                     "
@@ -95,12 +95,12 @@ export default function BanniereCarousel() {
     if (bannieres.length === 1) {
         return (
             <div
-                className="w-full h-[200px] md:h-[700px] relative overflow-hidden bg-cover bg-center"
-                style={{ backgroundImage: `url(http://localhost:3000${bannieres[0].image_url})` }}
+                className="w-full h-[200px] md:h-[800px] relative overflow-hidden bg-cover bg-center"
+                style={{ backgroundImage: `url(${API_BASE_URL}${bannieres[0].image_url})` }}
             >
                 <div
                     className="
-                        absolute bottom-2 right-1  /* Mobile : centré en bas */
+                        absolute bottom-[-15px] right-1  /* Mobile : centré en bas */
                         md:left-auto md:translate-x-0 md:right-10  /* Desktop : aligné à droite */
                         md:bottom-2                   /* En bas du conteneur */
                     "
@@ -120,7 +120,7 @@ export default function BanniereCarousel() {
 
     // Carousel avec plusieurs bannières
     return (
-        <div className="w-full h-[200px] md:h-[700px] relative overflow-hidden">
+        <div className="w-full h-[200px] md:h-[800px] relative overflow-hidden">
             {/* Images du carousel */}
             <div 
                 className="flex transition-transform duration-500 ease-in-out h-full"
@@ -130,12 +130,12 @@ export default function BanniereCarousel() {
                     <div
                         key={banniere.id}
                         className="w-full h-full flex-shrink-0 bg-cover bg-center relative"
-                        style={{ backgroundImage: `url(http://localhost:3000${banniere.image_url})` }}
+                        style={{ backgroundImage: `url(${API_BASE_URL}${banniere.image_url})` }}
                     >
                         {/* Bouton "Aller en boutique" */}
                         <div
                             className="
-                                absolute bottom-2 right-1   /* Mobile : centré en bas */
+                                absolute bottom-[-15px] right-1   /* Mobile : centré en bas */
                                 md:left-auto md:translate-x-0 md:right-10  /* Desktop : aligné à droite */
                                 md:bottom-2                   /* En bas du conteneur */
                             "

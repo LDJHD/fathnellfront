@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { categoriesAPI } from "../../services/api";
+import logo from "../../assets/logo.png";
 
 /* ----------------------- MODAL SUCCÈS ----------------------- */
 function SuccessModal({ onClose, editMode = false }) {
@@ -168,7 +169,7 @@ export default function AjouterCategorie({ editMode = false }) {
           </div>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white rounded-full border flex items-center justify-center">
-              <img className="w-8 h-8 rounded-full" src="https://placehold.co/32x32" />
+              <img className="w-8 h-8 rounded-full" src={logo} />
             </div>
             <div className="text-right leading-5">
               <div className="text-black text-sm font-bold">Fathnelle DJIHOUESSI</div>

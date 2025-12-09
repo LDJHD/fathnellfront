@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, Eye, EyeOff, Trash2, Plus, Image as ImageIcon } from 'lucide-react';
+import logo from "../../assets/logo.png";
 
 export default function GestionBannieres() {
     const [bannieres, setBannieres] = useState([]);
@@ -15,13 +16,13 @@ export default function GestionBannieres() {
         image: null
     });
 
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
 
     // Charger les bannières
     const chargerBannieres = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/banniere/listall`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/banniere/listall`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -63,7 +64,7 @@ export default function GestionBannieres() {
             uploadData.append('ordre', formData.ordre);
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/banniere/create`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/banniere/create`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -93,7 +94,7 @@ export default function GestionBannieres() {
     const toggleBanniere = async (id, currentStatus) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/banniere/toggle`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/banniere/toggle`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +127,7 @@ export default function GestionBannieres() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/banniere/delete`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/banniere/delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -295,7 +296,7 @@ export default function GestionBannieres() {
                                     <tr key={banniere.id}>
                                         <td className="px-6 py-4">
                                             <img
-                                                src={`http://localhost:3000${banniere.image_url}`}
+                                                src={`${API_BASE_URL}${banniere.image_url}`}
                                                 alt={banniere.titre || 'Bannière'}
                                                 className="w-24 h-16 object-cover rounded-lg"
                                             />

@@ -1,5 +1,6 @@
 import React from "react";
 import thumbnail from "../../assets/img01.png";
+import logo from "../../assets/logo.png";
 
 /*
   DashboardPage.jsx
@@ -42,7 +43,7 @@ function TopBar({ userName = "Fathnelle DJIHOUESSI", role = "Admin" }) {
 
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center outline outline-1 outline-offset-[-1px]">
-          <img src={thumbnail} alt="avatar" className="w-8 h-8 object-cover rounded-full" />
+          <img src={logo} alt="avatar" className="w-8 h-8 object-cover rounded-full" />
         </div>
         <div className="text-right">
           <div className="text-sm font-bold text-black font-['Glacial_Indifference'] leading-6">{userName}</div>

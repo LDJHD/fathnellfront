@@ -132,21 +132,38 @@ const Footer = () => {
           <h3 className="text-2xl md:text-3xl underline mb-4 leading-8 md:leading-10">Nos articles</h3>
           <ul className="space-y-10 text-3xl font-normal">
             {[
-              { label: "Sacs", path: "/categorie/sacs hommes" },
-              { label: "Chaussures", path: "/categorie/chaussures hommes" },
-              { label: "Ceintures", path: "/categorie/ceintures hommes" },
-              { label: "Petite maroquinerie", path: "/categorie/pochettes" },
-              { label: "Gadjets", path: "/categorie/accessoires" },
-              { label: "Produits d'entretiens", path: "/categorie/produits d'entretiens" },
+              { label: "Sacs", path: "/categorie/sacs hommes",scrollTo: "monte" },
+              { label: "Chaussures", path: "/categorie/chaussures hommes",scrollTo: "monte" },
+              { label: "Ceintures", path: "/categorie/ceintures hommes",scrollTo: "monte" },
+              { label: "Petite maroquinerie", path: "/categorie/pochettes",scrollTo: "monte" },
+              { label: "Gadjets", path: "/categorie/accessoires",scrollTo: "monte" },
+              { label: "Produits d'entretiens", path: "/categorie/produits d'entretiens",scrollTo: "monte"},
             ].map((item) => (
               <li key={item.label}>
+              {item.scrollTo ? (
+                <span
+                  onClick={() => {
+                    window.location.href = item.path;
+                    setTimeout(() => {
+                      const element = document.getElementById(item.scrollTo);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
+                  className="cursor-pointer text-white hover:text-red-600  bg-transparent block text-left"
+                >
+                  {item.label}
+                </span>
+              ) : (
                 <Link
                   to={item.path}
                   className="cursor-pointer text-white hover:text-red-600 block"
                 >
                   {item.label}
                 </Link>
-              </li>
+              )}
+            </li>
             ))}
           </ul>
         </div>

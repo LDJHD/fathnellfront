@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { produitsAPI, collectionsAPI } from "../../services/api";
+import logo from "../../assets/logo.png";
 
 export default function CatalogueResponsive() {
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ export default function CatalogueResponsive() {
       case 'disponible': return 'Disponible';
       case 'stock_limite': return 'Stock limité';
       case 'indisponible': return 'Indisponible';
+      case 'sur_commande': return 'Sur commande';
       default: return status;
     }
   };
@@ -125,6 +127,7 @@ export default function CatalogueResponsive() {
       case 'disponible': return 'text-green-600';
       case 'stock_limite': return 'text-orange-600';
       case 'indisponible': return 'text-red-600';
+      case 'sur_commande': return 'text-blue-600';
       default: return 'text-black';
     }
   };
@@ -137,7 +140,7 @@ export default function CatalogueResponsive() {
         <div className="text-black text-xl md:text-3xl font-bold">Gestion du catalogue</div>
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-white rounded-full border flex items-center justify-center">
-            <img src="https://placehold.co/32x32" className="w-8 h-8 rounded-full" />
+            <img src={logo} className="w-8 h-8 rounded-full" />
           </div>
           <div>
             <div className="text-black text-sm font-bold leading-5">Fathnelle DJIHOUESSI</div>
@@ -269,6 +272,12 @@ export default function CatalogueResponsive() {
               >
                 Indisponible
               </div>
+              <div
+                onClick={() => handleStockFilter("sur_commande")}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+              >
+                Sur commande
+              </div>
             </div>
           )}
         </div>
@@ -297,11 +306,14 @@ export default function CatalogueResponsive() {
               {/* IMAGE */}
               <img
                 className="w-14 h-14 rounded mx-auto sm:mx-0 object-cover"
-                src={produit.images && produit.images.length > 0
-                  ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.images[0].nom_fichier}`
+                src={produit.image_principale
+                  ? `${import.meta.env.VITE_API_URL}/uploads/produits/${produit.image_principale}`
                   : "https://placehold.co/50x50"
                 }
                 alt={produit.nom}
+                onError={(e) => {
+                  e.target.src = "https://placehold.co/50x50";
+                }}
               />
 
               {/* NOM */}

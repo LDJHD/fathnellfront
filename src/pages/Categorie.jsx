@@ -18,6 +18,7 @@ export default function Categorie() {
     const { isInWishlist, toggleWishlist } = useWishlist(); // Hook pour la wishlist
 
 
+    const API_BASE_URL = import.meta.env.VITE_API_URL;
     // Charger les catégories depuis la BDD
     const fetchCategories = async () => {
         try {
@@ -196,7 +197,7 @@ export default function Categorie() {
                             ? (() => {
                                 const dbCategory = findCategoryByUrlName(categoryName);
                                 return dbCategory?.banniere_url 
-                                    ? `http://localhost:3000${dbCategory.banniere_url}`
+                                    ? `${API_BASE_URL}${dbCategory.banniere_url}`
                                     : heroImage;
                             })()
                             : heroImage
@@ -285,7 +286,7 @@ export default function Categorie() {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 w-full">
+                    <div id="monte" className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 w-full">
                         {produits.map((produit) => (
                             <div 
                                 key={produit.id} 

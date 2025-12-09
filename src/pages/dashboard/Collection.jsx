@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { collectionsAPI } from "../../services/api";
+import logo from "../../assets/logo.png";
 
 export default function Collection() {
   const [collections, setCollections] = useState([]);
@@ -51,7 +52,7 @@ export default function Collection() {
             {/* Profil */}
             <div className="flex items-center px-4 py-2">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full outline outline-[0.5px] outline-black flex items-center justify-center">
-                <img src="https://placehold.co/32x32" className="w-8 h-8" />
+                <img src={logo} className="w-8 h-8" />
               </div>
 
               <div className="px-2 flex flex-col">

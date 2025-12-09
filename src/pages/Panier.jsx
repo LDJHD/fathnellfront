@@ -306,7 +306,8 @@ export default function Panier() {
 
                 <div className="flex flex-col justify-center flex-1 min-w-[100px] text-center md:text-left">
                   <p className="text-primary-base text-lg leading-6 md:leading-8">{item.produit_nom}</p>
-                  <p className="text-primary-base text-lg leading-6 md:leading-8">Prix à définir</p>
+                  <p className="text-primary-base text-lg leading-6 md:leading-8">{item.prix_unitaire.toLocaleString()} xof</p>
+                  <p className="text-primary-base text-lg leading-6 md:leading-8">Prix de personnalisation à définir</p>
                   {item.stock_status && (
                     <p className={`text-sm font-semibold ${getStockStatusColor(item.stock_status)}`}>
                       {getStockStatusText(item.stock_status)}

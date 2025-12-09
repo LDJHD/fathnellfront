@@ -5,22 +5,22 @@ export const CONFIG = {
     // Remplacez par votre numéro WhatsApp au format international (sans le +)
     // Exemple: pour +33 6 12 34 56 78, mettez "33612345678"
     // Exemple: pour +229 XX XX XX XX, mettez "229XXXXXXXX"
-    PHONE_NUMBER: "22967357728", // À REMPLACER par votre vraie numéro 22999999515
-    
+    PHONE_NUMBER: "22999999515", // À REMPLACER par votre vraie numéro 22999999515
+
     // Messages prédéfinis
     MESSAGES: {
       ORDER: (numeroCommande, montant, articles = []) => {
         console.log("📱 Génération message ORDER avec articles:", articles);
-        let message = `Bonjour FathNell,
+        let message = `Bonjour FathNell maroquinerie,
 
 Je souhaite finaliser ma commande. Voici les détails :
 
 `;
-        
+
         // Séparer les articles personnalisés et non personnalisés
         const articlesNonPersonnalises = articles.filter(article => !article.personnalise);
         const articlesPersonnalises = articles.filter(article => article.personnalise);
-        
+
         // Articles sans personnalisation
         if (articlesNonPersonnalises.length > 0) {
           message += `Articles sans personnalisation :
@@ -44,15 +44,15 @@ Je souhaite finaliser ma commande. Voici les détails :
             }
             message += `Quantité : ${quantite}
 `;
-            const prixUnitaire = typeof article.prix_unitaire === 'number' 
-              ? article.prix_unitaire.toLocaleString() 
+            const prixUnitaire = typeof article.prix_unitaire === 'number'
+              ? article.prix_unitaire.toLocaleString()
               : parseFloat(article.prix_unitaire || 0).toLocaleString();
             message += `Prix : ${prixUnitaire} FCFA
 
 `;
           });
         }
-        
+
         // Articles avec personnalisation
         if (articlesPersonnalises.length > 0) {
           message += `Articles avec personnalisation :
@@ -81,12 +81,18 @@ Je souhaite finaliser ma commande. Voici les détails :
             }
             message += `Quantité : ${quantite}
 `;
+            const prixUnitaire = typeof article.prix_unitaire === 'number'
+              ? article.prix_unitaire.toLocaleString()
+              : parseFloat(article.prix_unitaire || 0).toLocaleString();
+            message += `Prix sans personalisation  : ${prixUnitaire} FCFA
+
+`;
             message += `Prix : à définir
 
 `;
           });
         }
-        
+
         // Calcul du total pour les articles non personnalisés
         if (articlesNonPersonnalises.length > 0) {
           const totalNonPersonnalises = articlesNonPersonnalises.reduce((total, article) => {
@@ -98,23 +104,23 @@ Je souhaite finaliser ma commande. Voici les détails :
 
 `;
         }
-        
+
         message += `Merci de me confirmer le prix total et le délai de livraison.`;
         return message;
       },
-        
+
       CUSTOM_ORDER: (numeroCommande, articles = []) => {
         console.log("📱 Génération message CUSTOM_ORDER avec articles:", articles);
-        let message = `Bonjour FathNell,
+        let message = `Bonjour FathNell maroquinerie,
 
 Je souhaite finaliser ma commande. Voici les détails :
 
 `;
-        
+
         // Séparer les articles personnalisés et non personnalisés
         const articlesNonPersonnalises = articles.filter(article => !article.personnalise);
         const articlesPersonnalises = articles.filter(article => article.personnalise);
-        
+
         // Articles sans personnalisation
         if (articlesNonPersonnalises.length > 0) {
           message += `Articles sans personnalisation :
@@ -138,19 +144,17 @@ Je souhaite finaliser ma commande. Voici les détails :
             }
             message += `Quantité : ${quantite}
 `;
-            const prixUnitaire = typeof article.prix_unitaire === 'number' 
-              ? article.prix_unitaire.toLocaleString() 
+            const prixUnitaire = typeof article.prix_unitaire === 'number'
+              ? article.prix_unitaire.toLocaleString()
               : parseFloat(article.prix_unitaire || 0).toLocaleString();
             message += `Prix : ${prixUnitaire} FCFA
-
 `;
           });
         }
-        
+
         // Articles avec personnalisation
         if (articlesPersonnalises.length > 0) {
           message += `Articles avec personnalisation :
-
 `;
           articlesPersonnalises.forEach((article) => {
             const nomProduit = article.produit_nom || article.nom || 'Produit sans nom';
@@ -175,12 +179,16 @@ Je souhaite finaliser ma commande. Voici les détails :
             }
             message += `Quantité : ${quantite}
 `;
-            message += `Prix : à définir
-
+            const prixUnitaire = typeof article.prix_unitaire === 'number'
+              ? article.prix_unitaire.toLocaleString()
+              : parseFloat(article.prix_unitaire || 0).toLocaleString();
+            message += `Prix : ${prixUnitaire} FCFA
+`;
+            message += `Prix de personnalisation à définir
 `;
           });
         }
-        
+
         // Calcul du total pour les articles non personnalisés seulement
         if (articlesNonPersonnalises.length > 0) {
           const totalNonPersonnalises = articlesNonPersonnalises.reduce((total, article) => {
@@ -192,27 +200,27 @@ Je souhaite finaliser ma commande. Voici les détails :
 
 `;
         }
-        
+
         message += `Merci de me confirmer le prix total et le délai de livraison.`;
         return message;
       },
-        
+
       CONTACT: () =>
-        `Bonjour ! 👋\n\nJe souhaite obtenir des informations sur vos produits FathNell.\n\nMerci de me recontacter.\n\nCordialement`,
-        
+        `Bonjour FathNell maroquinerie! 👋\n\nJe souhaite obtenir des informations sur (.........)(........) veuillez remplir le champs.\n\nMerci de me revenir.\n\nCordialement`,
+
       PRODUCT_INFO: (productName) =>
-        `Bonjour ! 👋\n\nJe suis intéressé(e) par votre produit : ${productName}\n\n` +
+        `Bonjour FathNell maroquinerie! 👋\n\nJe suis intéressé(e) par votre produit : ${productName}\n\n` +
         `Pourriez-vous me donner plus d'informations ?\n\nMerci !`
     }
   },
-  
+
   // Configuration générale
   APP: {
     NAME: "FathNell",
     CURRENCY: "XOF",
     COMPANY_NAME: "FathNell - Maroquinerie de luxe"
   },
-  
+
   // Configuration des notifications
   NOTIFICATIONS: {
     SUCCESS_DURATION: 3000,
@@ -223,12 +231,12 @@ Je souhaite finaliser ma commande. Voici les détails :
 // Fonction utilitaire pour générer l'URL WhatsApp
 export const generateWhatsAppURL = (message) => {
   const phoneNumber = CONFIG.WHATSAPP.PHONE_NUMBER;
-  
+
   if (phoneNumber === "229XXXXXXXX") {
     console.warn("⚠️ ATTENTION: Le numéro WhatsApp n'est pas configuré ! Modifiez CONFIG.WHATSAPP.PHONE_NUMBER dans config.js");
     return "#"; // Retourne un lien vide si pas configuré
   }
-  
+
   return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 };
 

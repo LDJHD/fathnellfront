@@ -10,6 +10,7 @@ import Panier from "../pages/Panier";
 import CategoriePublique from "../pages/categorie";
 import FicheProduit from "../pages/FicheProduit";
 import Magazin from "../pages/magazin";
+import Search from "../pages/Search";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import GestionCommandes from "../pages/dashboard/Gestioncommandes";
@@ -47,6 +48,7 @@ export default function AppRoutes() {
           <Route path="/categorie/:categoryName" element={<CategoriePublique />} />
           <Route path="/magazin/:collectionId" element={<Magazin />} />
           <Route path="/produit/:id" element={<FicheProduit />} />
+          <Route path="/search" element={<Search />} />
         </Route>
 
         {/* Routes du dashboard avec DashboardLayout */}
