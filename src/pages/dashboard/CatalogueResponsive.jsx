@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { produitsAPI, collectionsAPI } from "../../services/api";
+import { produitsAPI, collectionsAPI, categoriesAPI } from "../../services/api";
 import logo from "../../assets/logo.png";
 import { getProductImageUrl } from "../../utils/imageUtils";
 
@@ -10,13 +10,16 @@ export default function CatalogueResponsive() {
   // États pour les données
   const [produits, setProduits] = useState([]);
   const [collections, setCollections] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // États pour les filtres
   const [selectedCollection, setSelectedCollection] = useState("");
   const [selectedStockStatus, setSelectedStockStatus] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [showCollectionDropdown, setShowCollectionDropdown] = useState(false);
   const [showStockDropdown, setShowStockDropdown] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   // Charger les données initiales
   useEffect(() => {
@@ -29,6 +32,13 @@ export default function CatalogueResponsive() {
         if (collectionsResponse.ok) {
           const collectionsData = await collectionsResponse.json();
           setCollections(collectionsData.collections || []);
+        }
+
+        // Charger les catégories
+        const categoriesResponse = await categoriesAPI.getAll();
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData.categories || []);
         }
 
         // Charger les produits
@@ -44,19 +54,52 @@ export default function CatalogueResponsive() {
   }, []);
 
   // Charger les produits avec filtres
-  const loadProduits = async (filters = {}) => {
+  const loadProduits = async (customFilters = {}) => {
     try {
+      // Préparer les paramètres de requête
       const queryParams = {};
-      if (selectedCollection) queryParams.collection_id = selectedCollection;
-      if (selectedStockStatus) queryParams.stock_status = selectedStockStatus;
+      
+      // Utiliser les filtres personnalisés d'abord, sinon utiliser l'état actuel
+      const collectionFilter = customFilters.hasOwnProperty('collection_id') 
+        ? customFilters.collection_id 
+        : selectedCollection;
+      const stockFilter = customFilters.hasOwnProperty('stock_status') 
+        ? customFilters.stock_status 
+        : selectedStockStatus;
+      const categoryFilter = customFilters.hasOwnProperty('categorie_id') 
+        ? customFilters.categorie_id 
+        : selectedCategory;
 
-      // Fusionner avec les filtres passés en paramètre
-      Object.assign(queryParams, filters);
+      // Appliquer les filtres seulement s'ils ne sont pas vides
+      if (collectionFilter && collectionFilter !== "") {
+        queryParams.collection_id = collectionFilter;
+      }
+      if (stockFilter && stockFilter !== "") {
+        queryParams.stock_status = stockFilter;
+      }
+      if (categoryFilter && categoryFilter !== "") {
+        queryParams.categorie_id = categoryFilter;
+      }
 
+      // Ajouter d'autres filtres potentiels
+      Object.keys(customFilters).forEach(key => {
+        if (!['collection_id', 'stock_status', 'categorie_id'].includes(key) && customFilters[key]) {
+          queryParams[key] = customFilters[key];
+        }
+      });
+
+      console.log("Filtres appliqués:", queryParams); // Debug
+
+      // Utiliser l'API existante avec les paramètres
       const response = await produitsAPI.getAll(queryParams);
+      
       if (response.ok) {
         const data = await response.json();
         setProduits(data.produits || []);
+        console.log(`${data.produits?.length || 0} produits chargés avec filtres:`, queryParams); // Debug
+      } else {
+        console.error("Erreur API:", response.status, await response.text());
+        setProduits([]);
       }
     } catch (error) {
       console.error("Erreur lors du chargement des produits:", error);
@@ -64,12 +107,12 @@ export default function CatalogueResponsive() {
     }
   };
 
-  // Appliquer les filtres
+  // Appliquer les filtres quand ils changent
   useEffect(() => {
     if (!loading) {
       loadProduits();
     }
-  }, [selectedCollection, selectedStockStatus]);
+  }, [selectedCollection, selectedStockStatus, selectedCategory, loading]);
 
   // Gestionnaires d'événements
   const handleCollectionFilter = (collectionId) => {
@@ -80,6 +123,11 @@ export default function CatalogueResponsive() {
   const handleStockFilter = (stockStatus) => {
     setSelectedStockStatus(stockStatus);
     setShowStockDropdown(false);
+  };
+
+  const handleCategoryFilter = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setShowCategoryDropdown(false);
   };
 
   const handleAddArticle = () => {
@@ -162,10 +210,54 @@ export default function CatalogueResponsive() {
       <div className="text-black text-lg">Filtrer par :</div>
 
       <div className="flex flex-col md:flex-row gap-4">
-        {/* Filtre Catégories - Placeholder pour l'instant */}
-        <div className="px-4 py-1 bg-neutral-200 rounded flex items-center justify-between cursor-pointer w-full md:w-60 opacity-50">
-          <span className="text-black text-base">Catégories d'articles</span>
-          <div className="w-3 h-3 bg-zinc-400 border border-black" />
+        {/* Filtre Catégories */}
+        <div className="relative w-full md:w-60">
+          <div
+            onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+            className="px-4 py-1 bg-neutral-200 rounded flex items-center justify-between cursor-pointer"
+          >
+            <span className="text-black text-base">
+              {selectedCategory
+                ? categories.find(c => c.id == selectedCategory)?.nom || 'Catégories d\'articles'
+                : 'Catégories d\'articles'
+              }
+            </span>
+            <svg
+              className="w-3 h-3 inline-block"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M6 9l6 6 6-6"
+                stroke="#000"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          {showCategoryDropdown && (
+            <div className="absolute top-full left-0 right-0 mt-1 text-black bg-white border border-gray-300 rounded shadow-lg z-10">
+              <div
+                onClick={() => handleCategoryFilter("")}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+              >
+                Toutes les catégories
+              </div>
+              {categories.map(category => (
+                <div
+                  key={category.id}
+                  onClick={() => handleCategoryFilter(category.id)}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                >
+                  {category.nom}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Filtre Collection */}
@@ -414,12 +506,13 @@ export default function CatalogueResponsive() {
       </div>
 
       {/* Fermer les dropdowns quand on clique ailleurs */}
-      {(showCollectionDropdown || showStockDropdown) && (
+      {(showCollectionDropdown || showStockDropdown || showCategoryDropdown) && (
         <div
           className="fixed inset-0 z-5"
           onClick={() => {
             setShowCollectionDropdown(false);
             setShowStockDropdown(false);
+            setShowCategoryDropdown(false);
           }}
         />
       )}

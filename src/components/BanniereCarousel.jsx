@@ -70,7 +70,7 @@ export default function BanniereCarousel() {
         return (
             <div
                 className="w-full h-[400px] md:h-[1000px] relative overflow-hidden bg-cover bg-center"
-                style={{ backgroundImage: `url(${heroImage})` }}
+                // style={{ backgroundImage: `url(${heroImage})` }}
             >
                 <div
                     className="

@@ -168,6 +168,7 @@ export default function Panier() {
       case 'disponible': return 'Disponible';
       case 'stock_limite': return 'Stock limité';
       case 'indisponible': return 'Indisponible';
+      case 'sur_commande': return 'Sur commande';
       default: return status || 'Disponible';
     }
   };
@@ -178,6 +179,7 @@ export default function Panier() {
       case 'disponible': return 'text-green-600';
       case 'stock_limite': return 'text-orange-600';
       case 'indisponible': return 'text-red-600';
+      case 'sur_commande': return 'text-blue-600';
       default: return 'text-black';
     }
   };

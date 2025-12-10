@@ -785,10 +785,10 @@ export default function AjouterArticle({ editMode = false }) {
                                         onChange={(e) => setStockStatus(e.target.value)}
                                         className="w-full bg-neutral-200 rounded px-3 py-2 max-w-xs"
                                     >
-                                        <option value="sur_commande">Sur commande</option>
                                         <option value="disponible">Disponible</option>
                                         <option value="stock_limite">Stock limité</option>
                                         <option value="indisponible">Indisponible</option>
+                                        <option value="sur_commande">Sur commande</option>
                                     </select>
                                 </div>
 
