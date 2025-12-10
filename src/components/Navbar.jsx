@@ -55,8 +55,8 @@ export default function Navbar() {
 
   const gadjetsDropdownItems = [
     { label: "Les accessoires", href: "/categorie/accessoires" },
-    { label: "Bracelets hommes", href: "/categorie/bracelets de montre hommes" },
-    { label: "Bracelets femmes", href: "/categorie/bracelets de montre femmes" }
+    { label: "Bracelets de montre hommes", href: "/categorie/bracelets de montre hommes" },
+    { label: "Bracelets de montre femmes", href: "/categorie/bracelets de montre femmes" }
   ];
 
   const petiteMaroquinerieItems = [

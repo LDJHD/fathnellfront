@@ -96,6 +96,7 @@ export default function AjouterArticle({ editMode = false }) {
     
     // Médias
     const [mediaFiles, setMediaFiles] = useState([]);
+    const [existingMedias, setExistingMedias] = useState([]);
     
     // Données de référence
     const [collections, setCollections] = useState([]);
@@ -166,6 +167,11 @@ export default function AjouterArticle({ editMode = false }) {
                         if (produit.tailles) {
                             setSelectedTailles(produit.tailles.map(t => t.id));
                         }
+
+                        // Remplir les médias existants
+                        if (produit.medias) {
+                            setExistingMedias(produit.medias);
+                        }
                     }
                 }
             } catch (error) {
@@ -212,6 +218,30 @@ export default function AjouterArticle({ editMode = false }) {
 
     const removeMediaFile = (index) => {
         setMediaFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const removeExistingMedia = async (index) => {
+        if (confirm("Êtes-vous sûr de vouloir supprimer ce média ?")) {
+            const mediaToDelete = existingMedias[index];
+            if (mediaToDelete && mediaToDelete.id) {
+                try {
+                    console.log("🗑️ Suppression média ID:", mediaToDelete.id, "du produit ID:", produitId);
+                    const response = await produitsAPI.deleteMedia(mediaToDelete.id, produitId);
+                    
+                    if (response.ok) {
+                        // Suppression réussie, mettre à jour l'interface
+                        setExistingMedias(prev => prev.filter((_, i) => i !== index));
+                        console.log("✅ Média supprimé avec succès");
+                    } else {
+                        const errorData = await response.json();
+                        alert("Erreur lors de la suppression : " + errorData.message);
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la suppression du média:", error);
+                    alert("Erreur de connexion lors de la suppression du média");
+                }
+            }
+        }
     };
 
     // Validation
@@ -653,6 +683,67 @@ export default function AjouterArticle({ editMode = false }) {
                                 {/* Galerie de médias */}
                                 <div className="flex flex-col gap-2">
                                     <div className="text-lg">Galerie de médias (photos et vidéos) :</div>
+
+                                    {/* Médias existants en mode édition */}
+                                    {editMode && existingMedias.length > 0 && (
+                                        <div className="mb-4">
+                                            <p className="text-sm text-gray-600 mb-2">Médias actuels :</p>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                                {existingMedias.map((media, index) => {
+                                                    const isVideo = media.type_media === 'video' || /\.(mp4|webm|mov|avi)$/i.test(media.media_url);
+                                                    return (
+                                                        <div key={index} className="relative bg-gray-100 rounded-lg overflow-hidden border">
+                                                            <div className="aspect-square relative">
+                                                                {isVideo ? (
+                                                                    <video 
+                                                                        src={media.media_url}
+                                                                        className="w-full h-full object-cover"
+                                                                        controls={false}
+                                                                        muted
+                                                                    >
+                                                                        Votre navigateur ne supporte pas la balise vidéo.
+                                                                    </video>
+                                                                ) : (
+                                                                    <img 
+                                                                        src={media.media_url}
+                                                                        alt={`Média ${index + 1}`}
+                                                                        className="w-full h-full object-cover"
+                                                                        onError={(e) => {
+                                                                            e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIxIDNIMkMxIDMgMCA0IDAgNVYxOUMwIDIwIDEgMjEgMiAyMUgyMkMyMyAyMSAyMyAyMCAyMyAxOVY1QzIzIDQgMjMgMyAyMSAzWiIgZmlsbD0iI0Y1RjVGNSIvPgo8cGF0aCBkPSJNOSA5SDlNMTcgMTVIMTJNOSA5QzkgMTAgOSAxMSA5IDEySDEyTDE3IDE1VjlIMTJWMTJIOUwxNyA5VjE1SDE3TTE3IDE1SDE3IiBmaWxsPSIjOTk5Ii8+Cjwvc3ZnPgo=';
+                                                                        }}
+                                                                    />
+                                                                )}
+                                                                
+                                                                {/* Badge principal */}
+                                                                {media.is_principal && (
+                                                                    <div className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
+                                                                        Principal
+                                                                    </div>
+                                                                )}
+                                                                
+                                                                {/* Icône type de média */}
+                                                                <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                                                                    {isVideo ? '🎬' : '📷'}
+                                                                </div>
+                                                                
+                                                                {/* Bouton supprimer */}
+                                                                <button
+                                                                    onClick={() => removeExistingMedia(index)}
+                                                                    className="absolute top-2 right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition"
+                                                                    type="button"
+                                                                    title="Supprimer ce média"
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                            <p className="text-xs text-gray-500 mt-2">Médias existants • Cliquez sur × pour supprimer</p>
+                                        </div>
+                                    )}
+
                                     <div className="flex gap-3 flex-wrap items-start">
                                         <label className="w-32 h-32 bg-neutral-200 rounded flex flex-col items-center justify-center text-neutral-600 cursor-pointer border-2 border-dashed hover:bg-neutral-300 transition">
                                             <input 
@@ -664,21 +755,24 @@ export default function AjouterArticle({ editMode = false }) {
                                             />
                                             <div className="text-2xl mb-1">📷🎬</div>
                                             <div className="text-sm text-center px-2">
-                                                Ajouter photos/vidéos
+                                                {editMode ? "Ajouter d'autres" : "Ajouter photos/vidéos"}
                                             </div>
                                         </label>
                                     </div>
                                     
-                                    {/* Composant de prévisualisation */}
+                                    {/* Composant de prévisualisation pour nouveaux fichiers */}
                                     <MediaPreview 
                                         files={mediaFiles} 
                                         onRemove={removeMediaFile}
                                     />
                                     
-                                    {mediaFiles.length > 0 && (
+                                    {(mediaFiles.length > 0 || (editMode && existingMedias.length > 0)) && (
                                         <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded">
-                                            <strong>📝 Note :</strong> Le premier média sera utilisé comme image principale du produit. 
-                                            Vous pouvez réorganiser l'ordre en supprimant et en rajoutant les fichiers dans l'ordre souhaité.
+                                            <strong>📝 Note :</strong> 
+                                            {editMode 
+                                                ? " Les médias existants conservent leur ordre. Les nouveaux médias seront ajoutés à la fin."
+                                                : " Le premier média sera utilisé comme image principale du produit. Vous pouvez réorganiser l'ordre en supprimant et en rajoutant les fichiers dans l'ordre souhaité."
+                                            }
                                         </div>
                                     )}
                                 </div>

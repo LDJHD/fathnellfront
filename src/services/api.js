@@ -102,7 +102,18 @@ export const produitsAPI = {
     delete: (id) => fetchWithAuth('/api/v1/produit/delete', {
         method: 'POST',
         body: JSON.stringify({ id })
-    })
+    }),
+    deleteMedia: (mediaId, produitId) => {
+        const token = localStorage.getItem("token");
+        return fetch(`${API_URL}/api/v1/produit/deleteMedia`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ mediaId, produitId })
+        });
+    }
 };
 
 // Panier

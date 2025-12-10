@@ -64,6 +64,8 @@ export default function AjouterCategorie({ editMode = false }) {
   const [description, setDescription] = useState("");
   const [parentId, setParentId] = useState("");
   const [banniere, setBanniere] = useState(null);
+  const [currentBanniere, setCurrentBanniere] = useState("");
+  const [removeBanniere, setRemoveBanniere] = useState(false);
   const [categoriesParent, setCategoriesParent] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -95,6 +97,7 @@ export default function AjouterCategorie({ editMode = false }) {
             setNom(categorie.nom || "");
             setDescription(categorie.description || "");
             setParentId(categorie.parent_id?.toString() || "");
+            setCurrentBanniere(categorie.banniere_url || "");
           } else {
             const errorData = await categorieResponse.json();
             setErrorMessage("Erreur lors du chargement de la catégorie: " + (errorData.message || "Catégorie non trouvée"));
@@ -127,6 +130,11 @@ export default function AjouterCategorie({ editMode = false }) {
       
       if (banniere) {
         formData.append('banniere', banniere);
+      }
+
+      // En mode édition, indiquer si la bannière doit être supprimée
+      if (editMode && removeBanniere) {
+        formData.append('removeBanniere', 'true');
       }
 
       let response;
@@ -233,6 +241,64 @@ export default function AjouterCategorie({ editMode = false }) {
         {/* Bannière de catégorie */}
         <div className="flex flex-col">
           <label className="p-2 text-black text-lg">Bannière de catégorie (optionnelle)</label>
+
+          {/* Bannière actuelle avec option de suppression */}
+          {currentBanniere && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">Bannière actuelle :</p>
+              <div className="relative inline-block">
+                <img 
+                  src={currentBanniere.startsWith('http') ? currentBanniere : `${import.meta.env.VITE_API_URL}/uploads/categories/${currentBanniere}`}
+                  alt="Bannière actuelle"
+                  className="w-48 h-24 object-cover rounded border"
+                  onError={(e) => {
+                    e.target.src = "https://placehold.co/400x200?text=Bannière+non+trouvée";
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    if (confirm("Êtes-vous sûr de vouloir supprimer la bannière actuelle ?")) {
+                      setCurrentBanniere("");
+                      setRemoveBanniere(true);
+                    }
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition"
+                  type="button"
+                  title="Supprimer la bannière actuelle"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Cliquez sur × pour supprimer cette bannière</p>
+            </div>
+          )}
+
+          {/* Aperçu de la nouvelle bannière sélectionnée */}
+          {banniere && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">Nouvelle bannière sélectionnée :</p>
+              <div className="relative inline-block">
+                <img 
+                  src={URL.createObjectURL(banniere)}
+                  alt="Nouvelle bannière"
+                  className="w-48 h-24 object-cover rounded border border-green-500"
+                />
+                <button
+                  onClick={() => setBanniere(null)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition"
+                  type="button"
+                  title="Annuler la sélection"
+                >
+                  ×
+                </button>
+                <div className="absolute top-1 left-1 bg-green-500 text-white px-1 rounded text-xs">
+                  Nouveau
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{banniere.name} ({(banniere.size / (1024 * 1024)).toFixed(1)} MB)</p>
+            </div>
+          )}
+
           <input
             type="file"
             accept="image/*"
@@ -242,10 +308,11 @@ export default function AjouterCategorie({ editMode = false }) {
           <p className="text-sm text-gray-600 mt-1">
             Image qui s'affichera en haut de la page catégorie (JPG, PNG, GIF, WEBP - max 5MB)
           </p>
-          {banniere && (
-            <p className="text-sm text-green-600 mt-1">
-              ✓ Fichier sélectionné : {banniere.name}
-            </p>
+          
+          {(currentBanniere || banniere) && (
+            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded mt-2">
+              <strong>📝 Note :</strong> {banniere ? "Une nouvelle bannière remplacera la bannière actuelle lors de la sauvegarde." : "Vous pouvez ajouter une nouvelle bannière ou supprimer la bannière actuelle."}
+            </div>
           )}
         </div>
 

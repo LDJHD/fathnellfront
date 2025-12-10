@@ -160,12 +160,14 @@ export default function Magazin() {
             </div>
 
             {/* ---------- BANNIÈRE ---------- */}
-            <div
-                className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
-                style={{ 
-                    backgroundImage: `url(${getCollectionImageUrl(collection?.image, heroImage)})` 
-                }}
-            />
+            {collection?.image ? (
+                <div
+                    className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
+                    style={{ 
+                        backgroundImage: `url(${getCollectionImageUrl(collection.image, null)})` 
+                    }}
+                />
+            ) : null}
             {/* ---------- nom collection ---------- */}
             {/* si collection
                 <div className="w-full px-4 md:px-5 py-10">

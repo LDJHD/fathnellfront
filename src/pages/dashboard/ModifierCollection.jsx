@@ -129,6 +129,11 @@ export default function ModifierCollection() {
       if (image) {
         formData.append('image', image);
       }
+      
+      // Indiquer si l'image actuelle doit être supprimée
+      if (!currentImage) {
+        formData.append('removeImage', 'true');
+      }
 
       const response = await collectionsAPI.update(id, formData);
       
@@ -218,21 +223,65 @@ export default function ModifierCollection() {
         <div className="flex flex-col">
           <label className="p-2 text-black text-lg">Image de couverture :</label>
 
-          {/* Image actuelle */}
+          {/* Image actuelle avec option de suppression */}
           {currentImage && (
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">Image actuelle :</p>
-              <img 
-                src={getCollectionImageUrl(currentImage, "https://placehold.co/300x200")}
-                alt="Image actuelle"
-                className="w-32 h-24 object-cover rounded border"
-              />
+              <div className="relative inline-block">
+                <img 
+                  src={getCollectionImageUrl(currentImage, "https://placehold.co/300x200")}
+                  alt="Image actuelle"
+                  className="w-32 h-24 object-cover rounded border"
+                  onError={(e) => {
+                    e.target.src = "https://placehold.co/300x200?text=Image+non+trouvée";
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    if (confirm("Êtes-vous sûr de vouloir supprimer l'image actuelle ?")) {
+                      setCurrentImage("");
+                    }
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition"
+                  type="button"
+                  title="Supprimer l'image actuelle"
+                >
+                  ×
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Cliquez sur × pour supprimer cette image</p>
             </div>
           )}
 
-          <label className="h-10 bg-neutral-200 rounded-sm flex items-center justify-between px-3 cursor-pointer">
+          {/* Aperçu de la nouvelle image sélectionnée */}
+          {image && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 mb-2">Nouvelle image sélectionnée :</p>
+              <div className="relative inline-block">
+                <img 
+                  src={URL.createObjectURL(image)}
+                  alt="Nouvelle image"
+                  className="w-32 h-24 object-cover rounded border border-green-500"
+                />
+                <button
+                  onClick={() => setImage(null)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600 transition"
+                  type="button"
+                  title="Annuler la sélection"
+                >
+                  ×
+                </button>
+                <div className="absolute top-1 left-1 bg-green-500 text-white px-1 rounded text-xs">
+                  Nouveau
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{image.name} ({(image.size / (1024 * 1024)).toFixed(1)} MB)</p>
+            </div>
+          )}
+
+          <label className="h-10 bg-neutral-200 rounded-sm flex items-center justify-between px-3 cursor-pointer hover:bg-neutral-300 transition">
             <span className="text-neutral-600 text-lg">
-              {image ? image.name : "Changer l'image (optionnel)"}
+              {image ? "Changer l'image sélectionnée" : (currentImage ? "Remplacer l'image actuelle" : "Choisir une image")}
             </span>
 
             {/* Icône upload */}
@@ -249,6 +298,12 @@ export default function ModifierCollection() {
               onChange={(e) => setImage(e.target.files[0])}
             />
           </label>
+          
+          {(currentImage || image) && (
+            <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded mt-2">
+              <strong>📝 Note :</strong> {image ? "Une nouvelle image remplacera l'image actuelle lors de la sauvegarde." : "Vous pouvez ajouter une nouvelle image ou supprimer l'image actuelle."}
+            </div>
+          )}
         </div>
 
         {/* BOUTONS */}

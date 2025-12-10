@@ -190,19 +190,17 @@ export default function Categorie() {
             </div>
 
             {/* ---------- BANNIÈRE ---------- */}
-            <div
-                className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
-                style={{ 
-                    backgroundImage: `url(${
-                        categoryName && categories.length > 0 
-                            ? (() => {
-                                const dbCategory = findCategoryByUrlName(categoryName);
-                                return getCategoryImageUrl(dbCategory?.banniere_url, heroImage);
-                            })()
-                            : heroImage
-                    })` 
-                }}
-            />
+            {(() => {
+                const dbCategory = findCategoryByUrlName(categoryName);
+                return dbCategory?.banniere_url ? (
+                    <div
+                        className="w-full h-[400px] md:h-[1000px] bg-cover bg-center"
+                        style={{ 
+                            backgroundImage: `url(${getCategoryImageUrl(dbCategory.banniere_url, null)})` 
+                        }}
+                    />
+                ) : null;
+            })()}
             {/* ---------- nom collection ---------- */}
             {/* si collection
                 <div className="w-full px-4 md:px-5 py-10">
